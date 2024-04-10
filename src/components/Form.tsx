@@ -6,6 +6,8 @@ import { z } from "zod";
 import { Sign } from "../utils/sign";
 import { betterZodError } from "../utils/zodError";
 import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { authRunAtom } from "../store/atom";
 
 interface fromProps {
   type: "sign-up" | "sign-in";
@@ -17,7 +19,9 @@ const userSchema = z.object({
 });
 
 type UserInputs = z.infer<typeof userSchema>;
+
 export default function Form({ type, title }: fromProps) {
+  const [authRun, setAuthRun] = useRecoilState(authRunAtom);
   const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
   const navigate = useNavigate();
 
@@ -35,7 +39,11 @@ export default function Form({ type, title }: fromProps) {
       }
       setUser({ email: "", name: "" });
       navigate("/");
-      return;
+      toast.success(res?.msg);
+      localStorage.setItem("authorization", res?.token!);
+      localStorage.setItem("userType", "Admin");
+
+      return setAuthRun(!authRun);
     } catch (error) {
       console.log(error);
       return setUser({ email: "", name: "" });
@@ -145,7 +153,7 @@ const SignLink = ({ type }: fromProps) => {
     <div className="flex flex-row items-center justify-center gap-1">
       <span>Don't have an account? </span>
       <Link
-        to="/auth/admin/sign/up"
+        to="/auth/admin/sign-up"
         className="text-blue-500 hover:text-blue-700"
       >
         Sign up now.
@@ -155,7 +163,7 @@ const SignLink = ({ type }: fromProps) => {
     <div className="flex flex-row items-center justify-center gap-1">
       <span>Already have an account? </span>
       <Link
-        to="/auth/admin/sign/in"
+        to="/auth/admin/sign-in"
         className="text-blue-500 hover:text-blue-700"
       >
         Sign in now.

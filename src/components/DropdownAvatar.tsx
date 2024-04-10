@@ -1,22 +1,29 @@
 import {
   Avatar,
   Box,
+  Button,
   IconButton,
   Menu,
   MenuItem,
   Typography,
 } from "@mui/material";
+import { signOut } from "firebase/auth";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import auth from "../firebase/firebase.config";
+import { toast } from "react-toastify";
+import { useRecoilState } from "recoil";
+import { authRunAtom } from "../store/atom";
 export interface DropdownAvatarProps {
   dropDownItems: { title: string; href: string }[];
   image?: string;
 }
 export default function DropdownAvatar({
   dropDownItems,
-
   image,
 }: DropdownAvatarProps) {
+  const [authRun, setAuthRun] = useRecoilState(authRunAtom);
+  const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
@@ -69,6 +76,28 @@ export default function DropdownAvatar({
               </Link>
             </MenuItem>
           ))}
+          <MenuItem
+            onClick={() => {
+              setAuthRun(!authRun);
+              if (localStorage.getItem("userType") == "Student") {
+                return signOut(auth)
+                  .then(() => {
+                    toast.success("Sign Out Successfully");
+                    localStorage.removeItem("userType");
+                    navigate("/");
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }
+              localStorage.removeItem("userType");
+              localStorage.removeItem("authorization");
+              localStorage.removeItem("key");
+              return navigate("/");
+            }}
+          >
+            <Typography textAlign="center">Sign Out</Typography>
+          </MenuItem>
         </Menu>
       )}
     </Box>

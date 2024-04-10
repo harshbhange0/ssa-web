@@ -15,10 +15,12 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
+import { useAuth } from "../store/hooks";
 
 interface Props {
   navItems: { title: string; href: string }[];
   dropDownItems: { title: string; href: string }[];
+  defaultNavItem: { title: string; href: string }[];
   window?: () => Window;
 }
 
@@ -32,6 +34,9 @@ export default function DrawerAppBar(props: Props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const auth = useAuth();
+ 
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -39,15 +44,25 @@ export default function DrawerAppBar(props: Props) {
       </Typography>
       <Divider />
       <List>
-        {props.navItems?.map((item, i) => (
-          <ListItem key={i} disablePadding>
-            <Link to={item.href}>
-              <ListItemButton sx={{ textAlign: "center" }}>
-                <ListItemText primary={item.title} />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        ))}
+        {!auth
+          ? props.navItems?.map((item, i) => (
+              <ListItem key={i} disablePadding>
+                <Link to={item.href}>
+                  <ListItemButton sx={{ textAlign: "center" }}>
+                    <ListItemText primary={item.title} />
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            ))
+          : props.defaultNavItem?.map((item, i) => (
+              <ListItem key={i} disablePadding>
+                <Link to={item.href}>
+                  <ListItemButton sx={{ textAlign: "center" }}>
+                    <ListItemText primary={item.title} />
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            ))}
       </List>
     </Box>
   );
@@ -76,15 +91,27 @@ export default function DrawerAppBar(props: Props) {
             <MenuIcon />
           </IconButton>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {props?.navItems.map((item, i) => (
-              <Link key={i} to={item.href}>
-                <Button sx={{ color: "black", textTransform: "capitalize" }}>
-                  {item.title}
-                </Button>
-              </Link>
-            ))}
+            {!auth
+              ? props?.navItems.map((item, i) => (
+                  <Link key={i} to={item.href}>
+                    <Button
+                      sx={{ color: "black", textTransform: "capitalize" }}
+                    >
+                      {item.title}
+                    </Button>
+                  </Link>
+                ))
+              : props?.defaultNavItem.map((item, i) => (
+                  <Link key={i} to={item.href}>
+                    <Button
+                      sx={{ color: "black", textTransform: "capitalize" }}
+                    >
+                      {item.title}
+                    </Button>
+                  </Link>
+                ))}
           </Box>{" "}
-          <DropdownAvatar  dropDownItems={props.dropDownItems} />
+          {auth && <DropdownAvatar dropDownItems={props.dropDownItems} />}
         </Toolbar>
       </AppBar>
 
