@@ -10,15 +10,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 export interface DropdownAvatarProps {
   dropDownItems: { title: string; href: string }[];
-  run: boolean;
   image?: string;
 }
 export default function DropdownAvatar({
   dropDownItems,
-  run,
+
   image,
 }: DropdownAvatarProps) {
-  React.useEffect(() => {}, [run]);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );

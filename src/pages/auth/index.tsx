@@ -2,11 +2,9 @@ import { useParams } from "react-router-dom";
 import Form from "../../components/Form";
 import { Box, Button } from "@mui/material";
 import { SignInWithGoogle } from "../../firebase/firebase.config";
-import { useRecoilState } from "recoil";
-import { userTypeAtom } from "../../store/atom";
+
 
 export default function SignComponent() {
-  const [userType, setUserType] = useRecoilState(userTypeAtom);
   const { id, type } = useParams();
   return type == "student" ? (
     <>
@@ -21,8 +19,6 @@ export default function SignComponent() {
           }}
           className=" flex items-center gap-3"
           onClick={() => {
-            setUserType("Student");
-            
             SignInWithGoogle();
           }}
         >

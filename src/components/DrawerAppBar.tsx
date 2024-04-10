@@ -15,10 +15,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
-import { useUserType } from "../store/hooks";
 
 interface Props {
-  run: boolean;
   navItems: { title: string; href: string }[];
   dropDownItems: { title: string; href: string }[];
   window?: () => Window;
@@ -27,7 +25,6 @@ interface Props {
 const drawerWidth = 240;
 
 export default function DrawerAppBar(props: Props) {
-  const userType = useUserType();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -57,7 +54,6 @@ export default function DrawerAppBar(props: Props) {
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
-
   return (
     <>
       <CssBaseline />
@@ -81,17 +77,14 @@ export default function DrawerAppBar(props: Props) {
           </IconButton>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {props?.navItems.map((item, i) => (
-              <Link to={item.href}>
-                <Button
-                  key={i}
-                  sx={{ color: "black", textTransform: "capitalize" }}
-                >
+              <Link key={i} to={item.href}>
+                <Button sx={{ color: "black", textTransform: "capitalize" }}>
                   {item.title}
                 </Button>
               </Link>
             ))}
           </Box>{" "}
-          <DropdownAvatar run={props.run} dropDownItems={props.dropDownItems} />
+          <DropdownAvatar  dropDownItems={props.dropDownItems} />
         </Toolbar>
       </AppBar>
 

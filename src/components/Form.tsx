@@ -6,8 +6,6 @@ import { z } from "zod";
 import { Sign } from "../utils/sign";
 import { betterZodError } from "../utils/zodError";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { runAtom, userTypeAtom } from "../store/atom";
 
 interface fromProps {
   type: "sign-up" | "sign-in";
@@ -20,27 +18,16 @@ const userSchema = z.object({
 
 type UserInputs = z.infer<typeof userSchema>;
 export default function Form({ type, title }: fromProps) {
-  const [run, setRun] = useRecoilState(runAtom);
-  const [userType, setUserType] = useRecoilState(userTypeAtom);
   const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
-  const errorTimer = () => {
-    setError(true);
-    setLoading(true);
-    setTimeout(() => {
-      setError(false);
-      setLoading(false);
-      setUser({ email: "", name: "" });
-    }, 1000);
-  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const outPut = userSchema.safeParse(user);
     if (!outPut.success) {
       betterZodError(outPut.error);
-      return errorTimer();
     }
     try {
       const res = await Sign({ type, email: user.email, name: user.name });
@@ -48,21 +35,11 @@ export default function Form({ type, title }: fromProps) {
         toast.error(res?.msg);
         return navigate("/admin/sign/in");
       }
-      if (res?.token && res.data) {
-        localStorage.setItem("key", res?.data);
-        localStorage.setItem("authorization", res?.token);
-        localStorage.setItem("userType", "Admin");
-
-        toast.success(res?.msg);
-      }
-      setLoading(false);
       setUser({ email: "", name: "" });
       navigate("/");
-      setUserType("Admin");
-      return setRun(!run);
+      return;
     } catch (error) {
       console.log(error);
-      setLoading(false);
       return setUser({ email: "", name: "" });
     }
   };
@@ -73,9 +50,7 @@ export default function Form({ type, title }: fromProps) {
         type={type}
         email={user.email}
         name={user.name}
-        error={error}
         onClick={(e) => handleSubmit(e)}
-        loading={loading}
         setName={(e) => setUser({ ...user, name: e.target.value })}
         setEmail={(e) => setUser({ ...user, email: e.target.value })}
       />
@@ -93,8 +68,8 @@ interface InputsProps {
   setName?:
     | React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     | undefined;
-  error: boolean;
-  loading: boolean;
+  error?: boolean;
+  loading?: boolean;
   title: string;
 }
 const Inputs = ({
