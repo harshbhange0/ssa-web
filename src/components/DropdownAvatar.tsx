@@ -9,13 +9,13 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 export interface DropdownAvatarProps {
-  settings: { title: string; href: string }[];
+  dropDownItems: { title: string; href: string }[];
   run: boolean;
   auth?: boolean;
   image?: string;
 }
 export default function DropdownAvatar({
-  settings,
+  dropDownItems,
   run,
   auth,
   image,
@@ -31,35 +31,36 @@ export default function DropdownAvatar({
     setAnchorElUser(null);
   };
   return (
-    <Box sx={{ flexGrow: 0 ,mx:"auto"}}>
+    <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
         {image ? <Avatar src={image} /> : <Avatar>A</Avatar>}
       </IconButton>
-
-      <Menu
-        sx={{ mt: "45px" }}
-        id="menu-appbar"
-        anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}
-      >
-        {settings?.map((s, i) => (
-          <MenuItem key={i} onClick={handleCloseUserMenu}>
-            <Link to={s.href}>
-              <Typography textAlign="center">{s.title}</Typography>
-            </Link>
-          </MenuItem>
-        ))}
-      </Menu>
+      {dropDownItems.length!==0 && (
+        <Menu
+          sx={{ mt: "45px" }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          {dropDownItems?.map((s, i) => (
+            <MenuItem key={i} onClick={handleCloseUserMenu}>
+              <Link to={s.href}>
+                <Typography textAlign="center">{s.title}</Typography>
+              </Link>
+            </MenuItem>
+          ))}
+        </Menu>
+      )}
     </Box>
   );
 }

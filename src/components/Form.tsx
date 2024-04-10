@@ -2,7 +2,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { FormEventHandler, useState } from "react";
 import { toast } from "react-toastify";
-import { optional, z } from "zod";
+import { z } from "zod";
 import { Sign } from "../utils/sign";
 import { betterZodError } from "../utils/zodError";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import { runAtom } from "../store/atom";
 
 interface fromProps {
   type: "sign-up" | "sign-in";
+  title?:string
 }
 const userSchema = z.object({
   email: z.string().email("Invalid Email"),
@@ -18,7 +19,7 @@ const userSchema = z.object({
 });
 
 type UserInputs = z.infer<typeof userSchema>;
-export default function Form({ type }: fromProps) {
+export default function Form({ type ,title}: fromProps) {
   const [run, setRun] = useRecoilState(runAtom);
   const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,6 +66,7 @@ export default function Form({ type }: fromProps) {
   return (
     <>
       <Inputs
+        title={title!}
         type={type}
         email={user.email}
         name={user.name}
@@ -90,10 +92,12 @@ interface InputsProps {
     | undefined;
   error: boolean;
   loading: boolean;
+  title: string;
 }
 const Inputs = ({
   type,
   onClick,
+  title,
   email,
   name,
   setEmail,
@@ -120,7 +124,7 @@ const Inputs = ({
         gutterBottom
         className="w-full text-center capitalize"
       >
-        Admin{" "}
+        {title}{" "}
         {type.toString().split("-")[0] + " " + type.toString().split("-")[1]}
       </Typography>
       <TextField
