@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import SignComponent from "./pages/auth/admin";
+import SignComponent from "./pages/auth";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRun } from "./store/hooks";
+import { useRun, useUserType } from "./store/hooks";
 import { Box } from "@mui/material";
 import DrawerAppBar from "./components/DrawerAppBar";
 import { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ const navItem: { title: string; href: string }[] = [
 export default function App() {
   const run = useRun();
   const [loading, setLoading] = useState<boolean>(true);
+  const userType = useUserType();
 
   useEffect(() => {
     setTimeout(() => {

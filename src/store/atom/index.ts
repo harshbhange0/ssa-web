@@ -5,7 +5,7 @@ export const runAtom = atom({
   default: false,
 });
 
-export const isAdminAtom = atom({
-  key: "isAdmin",
-  default: false,
+export const userTypeAtom = atom({
+  key: "userType",
+  default: undefined || "Student" || "Admin",
 });

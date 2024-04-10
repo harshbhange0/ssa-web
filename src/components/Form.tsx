@@ -7,11 +7,11 @@ import { Sign } from "../utils/sign";
 import { betterZodError } from "../utils/zodError";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { runAtom } from "../store/atom";
+import { runAtom, userTypeAtom } from "../store/atom";
 
 interface fromProps {
   type: "sign-up" | "sign-in";
-  title?:string
+  title?: string;
 }
 const userSchema = z.object({
   email: z.string().email("Invalid Email"),
@@ -19,8 +19,9 @@ const userSchema = z.object({
 });
 
 type UserInputs = z.infer<typeof userSchema>;
-export default function Form({ type ,title}: fromProps) {
+export default function Form({ type, title }: fromProps) {
   const [run, setRun] = useRecoilState(runAtom);
+  const [userType, setUserType] = useRecoilState(userTypeAtom);
   const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -50,12 +51,14 @@ export default function Form({ type ,title}: fromProps) {
       if (res?.token && res.data) {
         localStorage.setItem("key", res?.data);
         localStorage.setItem("authorization", res?.token);
-        localStorage.setItem("isAdmin", "true");
+        localStorage.setItem("userType", "Admin");
+
         toast.success(res?.msg);
       }
       setLoading(false);
       setUser({ email: "", name: "" });
       navigate("/");
+      setUserType("Admin");
       return setRun(!run);
     } catch (error) {
       console.log(error);
@@ -168,14 +171,20 @@ const SignLink = ({ type }: fromProps) => {
   return type == "sign-in" ? (
     <div className="flex flex-row items-center justify-center gap-1">
       <span>Don't have an account? </span>
-      <Link to="/auth/admin/sign/up" className="text-blue-500 hover:text-blue-700">
+      <Link
+        to="/auth/admin/sign/up"
+        className="text-blue-500 hover:text-blue-700"
+      >
         Sign up now.
       </Link>
     </div>
   ) : (
     <div className="flex flex-row items-center justify-center gap-1">
       <span>Already have an account? </span>
-      <Link to="/auth/admin/sign/in" className="text-blue-500 hover:text-blue-700">
+      <Link
+        to="/auth/admin/sign/in"
+        className="text-blue-500 hover:text-blue-700"
+      >
         Sign in now.
       </Link>
     </div>

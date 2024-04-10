@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
+import { useUserType } from "../store/hooks";
 
 interface Props {
   run: boolean;
@@ -26,6 +27,7 @@ interface Props {
 const drawerWidth = 240;
 
 export default function DrawerAppBar(props: Props) {
+  const userType = useUserType();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -42,11 +44,11 @@ export default function DrawerAppBar(props: Props) {
       <List>
         {props.navItems?.map((item, i) => (
           <ListItem key={i} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <Link to={item.href}>
+            <Link to={item.href}>
+              <ListItemButton sx={{ textAlign: "center" }}>
                 <ListItemText primary={item.title} />
-              </Link>
-            </ListItemButton>
+              </ListItemButton>
+            </Link>
           </ListItem>
         ))}
       </List>
@@ -79,18 +81,17 @@ export default function DrawerAppBar(props: Props) {
           </IconButton>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {props?.navItems.map((item, i) => (
-              <Button
-                key={i}
-                sx={{ color: "black", textTransform: "capitalize" }}
-              >
-                <Link to={item.href}>{item.title}</Link>
-              </Button>
+              <Link to={item.href}>
+                <Button
+                  key={i}
+                  sx={{ color: "black", textTransform: "capitalize" }}
+                >
+                  {item.title}
+                </Button>
+              </Link>
             ))}
           </Box>{" "}
-          <DropdownAvatar
-            run={props.run}
-            dropDownItems={props.dropDownItems}
-          />
+          <DropdownAvatar run={props.run} dropDownItems={props.dropDownItems} />
         </Toolbar>
       </AppBar>
 

@@ -1,11 +1,11 @@
 import { useRecoilValue } from "recoil";
-import { isAdminAtom, runAtom } from "../atom";
+import { userTypeAtom, runAtom } from "../atom";
 
 export const useRun = () => {
   const value = useRecoilValue(runAtom);
   return value;
 };
-export const useIsAdmin = () => {
-  const value = useRecoilValue(isAdminAtom);
-  return value;
+export const useUserType = () => {
+  const value = useRecoilValue(userTypeAtom);
+  return value
 };
