@@ -19,8 +19,6 @@ const userSchema = z.object({
 type UserInputs = z.infer<typeof userSchema>;
 export default function Form({ type, title }: fromProps) {
   const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
