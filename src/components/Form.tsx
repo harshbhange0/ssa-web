@@ -1,22 +1,25 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { toast } from "react-toastify";
-import { z } from "zod";
+import { optional, z } from "zod";
 import { Sign } from "../utils/sign";
 import { betterZodError } from "../utils/zodError";
 import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { runAtom } from "../store/atom";
 
 interface fromProps {
   type: "sign-up" | "sign-in";
 }
 const userSchema = z.object({
   email: z.string().email("Invalid Email"),
-  name: z.string().min(4, "Name is too short"),
+  name: z.string().optional(),
 });
 
 type UserInputs = z.infer<typeof userSchema>;
 export default function Form({ type }: fromProps) {
+  const [run, setRun] = useRecoilState(runAtom);
   const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -46,11 +49,13 @@ export default function Form({ type }: fromProps) {
       if (res?.token && res.data) {
         localStorage.setItem("key", res?.data);
         localStorage.setItem("authorization", res?.token);
+        localStorage.setItem("isAdmin", "true");
         toast.success(res?.msg);
       }
       setLoading(false);
       setUser({ email: "", name: "" });
-      return navigate("/");
+      navigate("/");
+      return setRun(!run);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -74,7 +79,7 @@ export default function Form({ type }: fromProps) {
 }
 interface InputsProps {
   type: "sign-up" | "sign-in";
-  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onClick?: FormEventHandler<HTMLFormElement> | undefined;
   email: string;
   name?: string;
   setEmail:
@@ -98,7 +103,8 @@ const Inputs = ({
 }: InputsProps) => {
   return (
     <Box
-      component={"div"}
+      onSubmit={onClick}
+      component={"form"}
       className="max-w-md"
       sx={{
         display: "flex",
@@ -140,7 +146,7 @@ const Inputs = ({
         />
       )}
       <Button
-        onClick={onClick}
+        type="submit"
         variant="outlined"
         disabled={loading}
         sx={{ mx: "auto", px: 3, pt: 1 }}
