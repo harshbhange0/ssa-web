@@ -7,17 +7,14 @@ import { Box } from "@mui/material";
 import DrawerAppBar from "./components/DrawerAppBar";
 import { useEffect, useState } from "react";
 import Home from "./pages/home";
-import { useRecoilState } from "recoil";
-import { isAdminAtom } from "./store/atom";
 
 const dropDownItems: { title: string; href: string }[] = [
   { title: "somthing", href: "/" },
 ];
 const navItem: { title: string; href: string }[] = [
   { title: "Home", href: "/" },
-  { title: "Admin Sign In", href: "/auth/admin/sign/in" },
-  { title: "Admin Sign Up", href: "/auth/admin/sign/up" },
-  { title: "Student Sign In", href: "/auth/student/sign/in" },
+  { title: "Admin", href: "/auth/admin/sign/up" },
+  { title: "Student", href: "/auth/student/sign/in" },
 ];
 
 export default function App() {
@@ -62,15 +59,6 @@ export default function App() {
               <Route path="/" element={<Home />} />
 
               <Route path="/auth/:type/sign/:id" element={<SignComponent />} />
-              <Route path="/auth/:type/sign/:id" element={<SignComponent />} />
-              <Route
-                path="/admin/*"
-                element={
-                  <div className="p-4 text-center text-2xl text-red-500">
-                    Not Authorized !
-                  </div>
-                }
-              />
             </Routes>
           )}
         </Box>

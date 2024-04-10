@@ -1,15 +1,25 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_APP_ID,
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
+  apiKey: "AIzaSyDmtu6tSdbJqnCH1XsQtzSCQpXJbyfWhC4",
+  authDomain: "ssa-web-a8b5e.firebaseapp.com",
+  projectId: "ssa-web-a8b5e",
+  storageBucket: "ssa-web-a8b5e.appspot.com",
+  messagingSenderId: "217211153004",
+  appId: "1:217211153004:web:35cf9cabd619505c0d4649",
+  measurementId: "G-6VHH74TENX",
 };
 
 export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 export default auth;
+
+const providerGoogle = new GoogleAuthProvider();
+
+export const SignInWithGoogle = () => {
+  signInWithPopup(auth, providerGoogle)
+    .then((res) => {
+      return res;
+    })
+    .catch((error) => alert(error.message));
+};

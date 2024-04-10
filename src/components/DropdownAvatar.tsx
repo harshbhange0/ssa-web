@@ -11,13 +11,11 @@ import { Link } from "react-router-dom";
 export interface DropdownAvatarProps {
   dropDownItems: { title: string; href: string }[];
   run: boolean;
-  auth?: boolean;
   image?: string;
 }
 export default function DropdownAvatar({
   dropDownItems,
   run,
-  auth,
   image,
 }: DropdownAvatarProps) {
   React.useEffect(() => {}, [run]);
@@ -33,9 +31,23 @@ export default function DropdownAvatar({
   return (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-        {image ? <Avatar src={image} /> : <Avatar>A</Avatar>}
+        {image ? (
+          <Avatar sx={{ width: 28, height: 28 }} src={image} />
+        ) : (
+          <Avatar
+            sx={{
+              backgroundColor: "transparent",
+              color: "#000",
+              border: ".1rem solid #ccc",
+              width: 28,
+              height: 28,
+            }}
+          >
+            A
+          </Avatar>
+        )}
       </IconButton>
-      {dropDownItems.length!==0 && (
+      {dropDownItems.length !== 0 && (
         <Menu
           sx={{ mt: "45px" }}
           id="menu-appbar"

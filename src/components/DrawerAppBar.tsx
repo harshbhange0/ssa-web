@@ -56,15 +56,16 @@ export default function DrawerAppBar(props: Props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
-  return  (
+  return (
     <>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{ boxShadow: " 0 0 0.2rem  #ccc" }}>
         <Toolbar
           sx={{
             display: "flex",
             flexDirection: "row ",
             justifyContent: "space-between",
+            backgroundColor: "white",
           }}
         >
           <IconButton
@@ -72,18 +73,24 @@ export default function DrawerAppBar(props: Props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ display: { sm: "none" } }}
+            sx={{ display: { sm: "none", color: "#000" } }}
           >
             <MenuIcon />
           </IconButton>
-          <DropdownAvatar run={props.run} dropDownItems={props.dropDownItems} />
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {props?.navItems.map((item, i) => (
-              <Button key={i} sx={{ color: "#fff" }}>
+              <Button
+                key={i}
+                sx={{ color: "black", textTransform: "capitalize" }}
+              >
                 <Link to={item.href}>{item.title}</Link>
               </Button>
             ))}
-          </Box>
+          </Box>{" "}
+          <DropdownAvatar
+            run={props.run}
+            dropDownItems={props.dropDownItems}
+          />
         </Toolbar>
       </AppBar>
 
