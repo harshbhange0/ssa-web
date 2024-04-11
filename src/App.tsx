@@ -47,13 +47,15 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const getAuth = async () => {
     const token = localStorage.getItem("authorization");
+    const type = localStorage.getItem("userType");
+
     try {
-      if (token == undefined || token == null) {
+      if (!token) {
         setAuth(false);
         return;
       }
       const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}admin/verify`,
+        `${import.meta.env.VITE_BASE_URL}${type == "Admin" ? "admin" : "user"}/verify`,
         {
           headers: {
             Authorization: token,
@@ -104,8 +106,8 @@ export default function App() {
             </Box>
           ) : (
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/auth/:type/:id" element={<SignComponent />} />
+              <Route path={"/"} element={<Home />} />
+              <Route path={"/auth/:type/:id"} element={<SignComponent />} />
               <Route path={"/profile/:type"} element={<Profile />} />
               <Route path={"/quiz/:type"} element={<Quiz />} />
               <Route path={"/dashboard/:type"} element={<Dashboard />} />

@@ -21,8 +21,8 @@ export default function SignComponent() {
             border: "0.1rem solid rgb(231 229 228);",
           }}
           className=" flex items-center gap-3"
-          onClick={() => {
-            SignInWithGoogle();
+          onClick={async () => {
+            await SignInWithGoogle();
             setAuthRun(!authRun);
             localStorage.setItem("userType", "Student");
           }}

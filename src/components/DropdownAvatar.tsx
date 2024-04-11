@@ -18,6 +18,8 @@ export interface DropdownAvatarProps {
   dropDownItems: { title: string; href: string }[];
   image?: string;
 }
+
+
 export default function DropdownAvatar({
   dropDownItems,
   image,
@@ -77,23 +79,20 @@ export default function DropdownAvatar({
             </MenuItem>
           ))}
           <MenuItem
-            onClick={() => {
-              setAuthRun(!authRun);
-              if (localStorage.getItem("userType") == "Student") {
-                return signOut(auth)
-                  .then(() => {
-                    toast.success("Sign Out Successfully");
-                    localStorage.removeItem("userType");
-                    navigate("/");
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
+            onClick={async () => {
+              try {
+                await signOut(auth);
+              } catch (error) {
+                console.log(error);
+                toast.error("Error in Sign Out");
               }
+              toast.success("Sign Out Successfully");
               localStorage.removeItem("userType");
               localStorage.removeItem("authorization");
-              localStorage.removeItem("key");
-              return navigate("/");
+              localStorage.removeItem("id");
+              navigate("/");
+              setAuthRun(!authRun);
+              return;
             }}
           >
             <Typography textAlign="center">Sign Out</Typography>

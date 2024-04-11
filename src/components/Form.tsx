@@ -16,37 +16,64 @@ interface fromProps {
 const userSchema = z.object({
   email: z.string().email("Invalid Email"),
   name: z.string().optional(),
+  authKey: z.string().min(10, "Auth Key too Short").max(44, "Auth Key Too Big"),
 });
 
 type UserInputs = z.infer<typeof userSchema>;
 
 export default function Form({ type, title }: fromProps) {
+
+  const errorTime = () => {
+     setE(true);
+     setTimeout(() => {
+       setE(false);
+     }, 2000);
+     setL(false);
+  }
+
+  const [l, setL] = useState(false);
+  const [e, setE] = useState(false);
+
   const [authRun, setAuthRun] = useRecoilState(authRunAtom);
-  const [user, setUser] = useState<UserInputs>({ email: "", name: "" });
+  const [user, setUser] = useState<UserInputs>({
+    email: "",
+    name: "",
+    authKey: "",
+  });
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setL(true);
     const outPut = userSchema.safeParse(user);
     if (!outPut.success) {
-      betterZodError(outPut.error);
+     errorTime()
+      return betterZodError(outPut.error);
     }
     try {
-      const res = await Sign({ type, email: user.email, name: user.name });
+      const res: any = await Sign({
+        type,
+        email: user.email,
+        name: user.name,
+        authKey: user.authKey,
+      });
       if (res?.data == null) {
         toast.error(res?.msg);
-        return navigate("/admin/sign/in");
+       errorTime();
+        return navigate("/auth/admin/sign-in");
       }
-      setUser({ email: "", name: "" });
+      setUser({ email: "", name: "", authKey: "" });
       navigate("/");
       toast.success(res?.msg);
+      localStorage.setItem("id", res.data!);
       localStorage.setItem("authorization", res?.token!);
       localStorage.setItem("userType", "Admin");
-
+      setL(false);
       return setAuthRun(!authRun);
     } catch (error) {
+      errorTime();
       console.log(error);
-      return setUser({ email: "", name: "" });
+      return setUser({ email: "", name: "", authKey: "" });
     }
   };
   return (
@@ -54,8 +81,12 @@ export default function Form({ type, title }: fromProps) {
       <Inputs
         title={title!}
         type={type}
+        error={e}
+        loading={l}
         email={user.email}
         name={user.name}
+        authKey={user.authKey}
+        setAuthKey={(e) => setUser({ ...user, authKey: e.target.value })}
         onClick={(e) => handleSubmit(e)}
         setName={(e) => setUser({ ...user, name: e.target.value })}
         setEmail={(e) => setUser({ ...user, email: e.target.value })}
@@ -68,10 +99,14 @@ interface InputsProps {
   onClick?: FormEventHandler<HTMLFormElement> | undefined;
   email: string;
   name?: string;
+  authKey: string;
   setEmail:
     | React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     | undefined;
   setName?:
+    | React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
+    | undefined;
+  setAuthKey:
     | React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     | undefined;
   error?: boolean;
@@ -88,6 +123,8 @@ const Inputs = ({
   setName,
   error,
   loading,
+  setAuthKey,
+  authKey,
 }: InputsProps) => {
   return (
     <Box
@@ -97,7 +134,7 @@ const Inputs = ({
       sx={{
         display: "flex",
         gap: 2,
-        mt: 20,
+        mt: 5,
         mx: "auto",
         flexDirection: "column",
         p: 2,
@@ -127,12 +164,22 @@ const Inputs = ({
           required
           id="outlined-required"
           autoComplete="off"
-          label="Name"
+          label="name"
           value={name}
           onChange={setName}
           error={error}
         />
       )}
+      <TextField
+        type="password"
+        required
+        id="outlined-required"
+        autoComplete="off"
+        label="Auth Key"
+        value={authKey}
+        onChange={setAuthKey}
+        error={error}
+      />
       <Button
         type="submit"
         variant="outlined"

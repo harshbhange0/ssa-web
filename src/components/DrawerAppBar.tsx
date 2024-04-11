@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
+import axios from "axios";
 
 interface Props {
   navItems: { title: string; href: string }[];
@@ -29,14 +30,41 @@ const drawerWidth = 240;
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [user, setUser] = React.useState({
+    email: "",
+    name: "",
+    image: "",
+  });
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
   const auth = useAuth();
- 
-
+  const getUser = async () => {
+    if (localStorage.getItem("userType")) {
+      const id = localStorage.getItem("id");
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}${localStorage.getItem("userType")?.toLowerCase() == "student" ? "user" : "admin"}/user/${id}`,
+        );
+        if (res.data) {
+          const r = res.data.data;
+          return setUser({
+            email: r.email,
+            name: r.name,
+            image: r.image,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      return setUser({ email: "", name: "", image: "" });
+    }
+  };
+  React.useEffect(() => {
+    getUser();
+  }, [auth]);
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -111,7 +139,12 @@ export default function DrawerAppBar(props: Props) {
                   </Link>
                 ))}
           </Box>{" "}
-          {auth && <DropdownAvatar dropDownItems={props.dropDownItems} />}
+          {auth && (
+            <DropdownAvatar
+              image={user.image}
+              dropDownItems={props.dropDownItems}
+            />
+          )}
         </Toolbar>
       </AppBar>
 
