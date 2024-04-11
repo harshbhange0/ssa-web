@@ -1,4 +1,4 @@
-import { Route, Routes, useParams } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import SignComponent from "./pages/auth";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -52,7 +52,7 @@ export default function App() {
 
     try {
       if (!token) {
-        setAuth(false);
+        setAuth(!auth);
         return;
       }
       const res = await axios.get(
