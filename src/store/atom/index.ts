@@ -8,3 +8,8 @@ export const authRunAtom = atom({
   key: "authRun",
   default: false,
 });
+
+export const sideOpenAtom = atom({
+  key: "sideOpen",
+  default: false,
+});

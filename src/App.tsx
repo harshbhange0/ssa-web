@@ -13,6 +13,7 @@ import { useAuthRun } from "./store/hooks";
 import Profile from "./pages/profile";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/dashboard";
+import SideBar from "./components/SideBar";
 
 export default function App() {
   const [auth, setAuth] = useRecoilState(authAtom);
@@ -97,22 +98,25 @@ export default function App() {
           dropDownItems={dropDownItems}
         />
         <Box
-          component="main"
-          sx={{ pt: { xs: "56px", sm: "64px" }, height: "100%", width: "100%" }}
+          component="div"
+          sx={{ pt: { xs: "64px" }, height: "100%", width: "100%" }}
         >
-          {loading ? (
+          {loading && (
             <Box sx={{ width: "100%" }}>
               <LinearProgress />
             </Box>
-          ) : (
-            <Routes>
-              <Route path={"/"} element={<Home />} />
-              <Route path={"/auth/:type/:id"} element={<SignComponent />} />
-              <Route path={"/profile/:type"} element={<Profile />} />
-              <Route path={"/quiz/:type"} element={<Quiz />} />
-              <Route path={"/dashboard/:type"} element={<Dashboard />} />
-            </Routes>
           )}
+          <>
+            <SideBar>
+              <Routes>
+                <Route path={"/"} element={<Home />} />
+                <Route path={"/auth/:type/:id"} element={<SignComponent />} />
+                <Route path={"/profile/:type"} element={<Profile />} />
+                <Route path={"/quiz/:type"} element={<Quiz />} />
+                <Route path={"/dashboard/:type"} element={<Dashboard />} />
+              </Routes>
+            </SideBar>
+          </>
         </Box>
       </Box>
     </>

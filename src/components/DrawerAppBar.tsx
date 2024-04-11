@@ -2,7 +2,6 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -17,6 +16,7 @@ import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
 import axios from "axios";
+import SideBarToggler from "./SideBarToggler";
 
 interface Props {
   navItems: { title: string; href: string }[];
@@ -68,9 +68,8 @@ export default function DrawerAppBar(props: Props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
+        SSA
       </Typography>
-      <Divider />
       <List>
         {!auth
           ? props.navItems?.map((item, i) => (
@@ -118,6 +117,9 @@ export default function DrawerAppBar(props: Props) {
           >
             <MenuIcon />
           </IconButton>
+          <Typography variant="h6" sx={{ my: 2, color: "#000" }}>
+            SSA
+          </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {!auth
               ? props?.navItems.map((item, i) => (
@@ -138,12 +140,16 @@ export default function DrawerAppBar(props: Props) {
                     </Button>
                   </Link>
                 ))}
-          </Box>{" "}
+          </Box>
+
           {auth && (
-            <DropdownAvatar
-              image={user.image}
-              dropDownItems={props.dropDownItems}
-            />
+            <div className="flex items-center justify-between gap-x-5">
+              <SideBarToggler />
+              <DropdownAvatar
+                image={user.image}
+                dropDownItems={props.dropDownItems}
+              />
+            </div>
           )}
         </Toolbar>
       </AppBar>
