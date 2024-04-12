@@ -60,7 +60,9 @@ const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
+      event;
     };
+  quizId;
   return (
     <Accordion
       expanded={expanded === "panel2"}
@@ -81,7 +83,7 @@ const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
         sx={{ gap: 2, display: "flex", flexDirection: "column" }}
       >
         {questions.map((q, i) => {
-           return (
+          return (
             <Fragment key={q._id}>
               <QuestionCard
                 qIndex={i}

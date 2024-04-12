@@ -4,7 +4,7 @@ import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, LinearProgress } from "@mui/material";
 import DrawerAppBar from "./components/DrawerAppBar";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Home from "./pages/home";
 import { useRecoilState } from "recoil";
 import { authAtom } from "./store/atom";

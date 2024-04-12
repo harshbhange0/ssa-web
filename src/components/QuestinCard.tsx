@@ -31,7 +31,7 @@ const QuestionCard = ({
       ...prevOption.slice(index + 1),
     ]);
   };
-
+  qIndex;
   return (
     <Box
       sx={{
