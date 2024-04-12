@@ -1,79 +1,65 @@
-
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { useSideOpen } from "../store/hooks";
+import { Divider } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
 
-const drawerWidth = 240;
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  ...theme.mixins.toolbar,
+  justifyContent: "center",
+  fontSize: "1.3rem",
+  fontWeight: "500",
 }));
-
-
-
-export default function SideBar({
-  children,
-}: {
-  children: JSX.Element | string[] | string;
-}) {
-  const open = useSideOpen();
+const type = localStorage.getItem("userType")?.toLocaleLowerCase();
+const sideBarItem: { title: string; href: string }[] = [
+  { title: "English", href: `/${type}/quiz/english` },
+  { title: "Math", href: `/${type}/quiz/math` },
+  { title: "Marathi", href: `/${type}/quiz/marathi` },
+];
+export default function SideBar() {
+  const location = useLocation();
+  const pageType = location.pathname.includes("dashboard")
+    ? "dashboard"
+    : "quiz";
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      component={"div"}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        maxWidth: "300px",
+        width: "100%",
+        boxShadow: "0 0 0.1rem 0 rgba(0, 0, 0, 0.12);",
+      }}
+      className="h-[calc(100vh-64px)]"
+      pt={2}
+    >
       <CssBaseline />
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
+      <DrawerHeader className="capitalize">{pageType} Subjects</DrawerHeader>
+      <Divider />
+      <List>
+        {sideBarItem.map((item, i) => {
+          return (
+            <ListItem key={i}>
+              <Link to={item.href} className="w-full">
+                <ListItemButton>
+                  <ListItemText className="text-center">
+                    {item.title}
+                  </ListItemText>
+                </ListItemButton>
+              </Link>
             </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main sx={{ px: 2, py: 0 }} open={open}>
-        {children}
-      </Main>
+          );
+        })}
+      </List>
     </Box>
   );
 }

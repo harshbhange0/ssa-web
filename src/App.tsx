@@ -4,7 +4,7 @@ import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, LinearProgress } from "@mui/material";
 import DrawerAppBar from "./components/DrawerAppBar";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Home from "./pages/home";
 import { useRecoilState } from "recoil";
 import { authAtom } from "./store/atom";
@@ -13,7 +13,6 @@ import { useAuthRun } from "./store/hooks";
 import Profile from "./pages/profile";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/dashboard";
-import SideBar from "./components/SideBar";
 
 export default function App() {
   const [auth, setAuth] = useRecoilState(authAtom);
@@ -41,14 +40,13 @@ export default function App() {
       title: "Home",
       href: "/",
     },
-    { title: "Dashboard", href: `/dashboard/${userType}` },
-    { title: "Quiz", href: `/quiz/${userType}` },
+    { title: "Dashboard", href: `/${userType}/dashboard` },
+    { title: "Quiz", href: `/${userType}/quiz` },
   ];
-
+  const type = localStorage.getItem("userType");
   const [loading, setLoading] = useState<boolean>(true);
   const getAuth = async () => {
     const token = localStorage.getItem("authorization");
-    const type = localStorage.getItem("userType");
 
     try {
       if (!token) {
@@ -102,20 +100,21 @@ export default function App() {
           sx={{ pt: { xs: "64px" }, height: "100%", width: "100%" }}
         >
           {loading && (
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%", position: "absolute" }}>
               <LinearProgress />
             </Box>
           )}
           <>
-            <SideBar>
-              <Routes>
-                <Route path={"/"} element={<Home />} />
-                <Route path={"/auth/:type/:id"} element={<SignComponent />} />
-                <Route path={"/profile/:type"} element={<Profile />} />
-                <Route path={"/quiz/:type"} element={<Quiz />} />
-                <Route path={"/dashboard/:type"} element={<Dashboard />} />
-              </Routes>
-            </SideBar>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/auth/:type/:id" element={<SignComponent />} />
+              <Route path="/profile/:type" element={<Profile />} />
+              <Route path="/:type/quiz/:subject?" element={<Quiz />} />
+              <Route
+                path="/:type/dashboard/:subject?"
+                element={<Dashboard />}
+              />
+            </Routes> 
           </>
         </Box>
       </Box>

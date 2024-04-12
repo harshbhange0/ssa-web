@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
 import axios from "axios";
-import SideBarToggler from "./SideBarToggler";
+
 
 interface Props {
   navItems: { title: string; href: string }[];
@@ -144,7 +144,7 @@ export default function DrawerAppBar(props: Props) {
 
           {auth && (
             <div className="flex items-center justify-between gap-x-5">
-              <SideBarToggler />
+           
               <DropdownAvatar
                 image={user.image}
                 dropDownItems={props.dropDownItems}
