@@ -17,18 +17,18 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   fontSize: "1.3rem",
   fontWeight: "500",
 }));
-const type = localStorage.getItem("userType")?.toLocaleLowerCase();
-const sideBarItem: { title: string; href: string }[] = [
-  { title: "English", href: `/${type}/quiz/english` },
-  { title: "Math", href: `/${type}/quiz/math` },
-  { title: "Marathi", href: `/${type}/quiz/marathi` },
-];
+
 export default function SideBar() {
   const location = useLocation();
   const pageType = location.pathname.includes("dashboard")
     ? "dashboard"
     : "quiz";
-
+  const type = localStorage.getItem("userType")?.toLocaleLowerCase();
+  const sideBarItem: { title: string; href: string }[] = [
+    { title: "English", href: `/${type}/${pageType}/english` },
+    { title: "Math", href: `/${type}/${pageType}/math` },
+    { title: "Marathi", href: `/${type}/${pageType}/marathi` },
+  ];
   return (
     <Box
       component={"div"}

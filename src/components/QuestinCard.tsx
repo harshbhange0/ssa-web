@@ -1,23 +1,22 @@
 import { Box, Button, FormControlLabel, Switch } from "@mui/material";
 import { useState } from "react";
 
-interface QuestionCardInputs {
-  question: string;
-  options: string[];
-  answerIndex: number;
-}
 interface QuestionCardProps {
   question: string;
   options: string[];
   answerIndex: number;
+  lastQuestion?: boolean;
+  qIndex?: any;
 }
 const QuestionCard = ({
   question,
   options,
   answerIndex,
+  lastQuestion,
+  qIndex,
 }: QuestionCardProps) => {
   const [isEditable, setEditable] = useState<boolean>(true);
-  const [que, setQue] = useState<QuestionCardInputs>({
+  const [que, setQue] = useState<QuestionCardProps>({
     question,
     options,
     answerIndex,
@@ -34,10 +33,18 @@ const QuestionCard = ({
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }} component={"div"}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        border: ".1rem solid #ccc",
+        p: 1,
+      }}
+      component={"div"}
+    >
       <div className="  p-2">
         <label className="flex flex-row items-center gap-2">
-          <span className="w-auto">1.</span>
+          <span className="w-auto"></span>
           <input
             readOnly={isEditable}
             type="text"
@@ -69,9 +76,12 @@ const QuestionCard = ({
             }}
           />
         </label>
-        {que.options.map((op, i) => {
+        {option.map((op, i) => {
           return (
-            <label className="flex items-center justify-center gap-2">
+            <label
+              key={i + "Dsdsf"}
+              className="flex items-center justify-center gap-2"
+            >
               <span>{i + 1}.</span>
               <input
                 readOnly={isEditable}
@@ -84,7 +94,9 @@ const QuestionCard = ({
           );
         })}
       </div>
-      <div className="grid grid-cols-4 gap-2 p-2">
+      <div
+        className={`${lastQuestion ? "grid-cols-4" : "grid-cols-3"} grid  gap-2 p-2`}
+      >
         <FormControlLabel
           sx={{ m: 0, display: "flex", justifyContent: "space-evenly" }}
           control={
@@ -98,7 +110,7 @@ const QuestionCard = ({
         />
         <Button disabled={isEditable}>Save</Button>
         <Button>Delete</Button>
-        <Button>Add</Button>
+        {lastQuestion ? <Button>Add Quiz</Button> : ""}
       </div>
     </Box>
   );

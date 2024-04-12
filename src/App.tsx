@@ -89,7 +89,7 @@ export default function App() {
         theme="light"
         transition={Slide}
       />
-      <Box component={"div"} sx={{ width: "100%" }}>
+      <Box component={"div"} sx={{ width: "100%", paddingLeft: ".1rem" }}>
         <DrawerAppBar
           defaultNavItem={defaultNavItem}
           navItems={navItem}
@@ -114,7 +114,7 @@ export default function App() {
                 path="/:type/dashboard/:subject?"
                 element={<Dashboard />}
               />
-            </Routes> 
+            </Routes>
           </>
         </Box>
       </Box>

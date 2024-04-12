@@ -1,26 +1,18 @@
-
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import SideBar from "../../components/SideBar";
-import {
-  Box,
-  Button,
-  Container,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
+import { Button, Container } from "@mui/material";
 
 import { data } from "../../../data";
 import QuizCard from "../../components/QuezCard";
 
 function Quiz() {
-  const params = useParams();
-  console.log(params?.subject);
+  const { subject } = useParams();
+  subject && console.log(subject);
 
   return (
-    <div className="flex flex-row">
+    <div className="flex w-full  flex-row">
       <SideBar />
-      <Container maxWidth="md" sx={{ pt: 10 }} className="w-full">
+      <Container maxWidth="md" sx={{ pt: 10 }} className="w-auto">
         <div className="flex flex-col justify-center">
           {data.map((quiz) => (
             <QuizCard
@@ -32,6 +24,7 @@ function Quiz() {
               questions={quiz.questions}
             />
           ))}
+          <Button>Add A Quiz</Button>
         </div>
       </Container>
     </div>
@@ -39,6 +32,3 @@ function Quiz() {
 }
 
 export default Quiz;
-
-
-

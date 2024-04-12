@@ -6,16 +6,15 @@ import MuiAccordionSummary, {
 } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import QuestionCard from "./QuestinCard";
+import { Divider } from "@mui/material";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
-  "&:not(:last-child)": {
-    borderBottom: 0,
-  },
+  margin: " .5rem 0",
   "&::before": {
     display: "none",
   },
@@ -69,10 +68,10 @@ const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
     >
       <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
         <div className="flex w-full items-center justify-between">
-          <Typography variant="h5" className="line-clamp-1">
+          <Typography variant="h5" className="line-clamp-1 capitalize">
             {title}
           </Typography>
-          <div className="grid grid-cols-2 gap-1">
+          <div className="grid grid-cols-2 gap-1 capitalize">
             <Typography>{subject}</Typography>
             <Typography>{date}</Typography>
           </div>
@@ -81,14 +80,19 @@ const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
       <AccordionDetails
         sx={{ gap: 2, display: "flex", flexDirection: "column" }}
       >
-        {questions.map((q) => {
-          return (
-            <QuestionCard
-              answerIndex={q.answerIndex}
-              options={q.options}
-              question={q.question}
-              key={q._id}
-            />
+        {questions.map((q, i) => {
+           return (
+            <Fragment key={q._id}>
+              <QuestionCard
+                qIndex={i}
+                lastQuestion={questions.length - i == 1 ? true : false}
+                answerIndex={q.answerIndex}
+                options={q.options}
+                question={q.question}
+                key={q._id}
+              />
+              <Divider />
+            </Fragment>
           );
         })}
       </AccordionDetails>
