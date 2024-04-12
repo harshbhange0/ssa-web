@@ -89,7 +89,7 @@ export default function App() {
         theme="light"
         transition={Slide}
       />
-      <Box component={"div"} sx={{ width: "100%", paddingLeft: ".1rem" }}>
+      <Box component={"div"} sx={{ width: "100%",}}>
         <DrawerAppBar
           defaultNavItem={defaultNavItem}
           navItems={navItem}
@@ -100,7 +100,7 @@ export default function App() {
           sx={{ pt: { xs: "64px" }, height: "100%", width: "100%" }}
         >
           {loading && (
-            <Box sx={{ width: "100%", position: "absolute" }}>
+            <Box sx={{ width: "100%", position: "absolute", top: "64px" }}>
               <LinearProgress />
             </Box>
           )}

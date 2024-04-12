@@ -71,7 +71,7 @@ export default function DrawerAppBar(props: Props) {
         SSA
       </Typography>
       <List>
-        {!auth
+        {auth
           ? props.navItems?.map((item, i) => (
               <ListItem key={i} disablePadding>
                 <Link to={item.href}>
