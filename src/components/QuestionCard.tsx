@@ -1,13 +1,8 @@
 import { Box, Button, FormControlLabel, Switch } from "@mui/material";
 import { useState } from "react";
+import { QuestionCardProps } from "../types/questionCard_types";
 
-interface QuestionCardProps {
-  question: string;
-  options: string[];
-  answerIndex: number;
-  lastQuestion?: boolean;
-  qIndex?: any;
-}
+
 const QuestionCard = ({
   question,
   options,

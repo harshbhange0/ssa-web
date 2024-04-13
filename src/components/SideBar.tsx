@@ -1,4 +1,3 @@
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
@@ -7,16 +6,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { Divider } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+import { DrawerHeader } from "./ui/SideBarStyles";
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  justifyContent: "center",
-  fontSize: "1.3rem",
-  fontWeight: "500",
-}));
+
 
 export default function SideBar() {
   const location = useLocation();

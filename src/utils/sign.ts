@@ -1,11 +1,6 @@
 import axios from "axios";
+import { signInResTypes, singProps } from "../types/signIn_types";
 
-interface singProps {
-  email: string;
-  name?: string;
-  type: "sign-up" | "sign-in";
-  authKey: string;
-}
 export const Sign = async ({ email, name, type, authKey }: singProps) => {
   try {
     if (!(authKey.length >= 44)) {
@@ -27,12 +22,7 @@ export const Sign = async ({ email, name, type, authKey }: singProps) => {
         },
       },
     );
-    const data: {
-      data: string | null;
-      msg: string;
-      signInToken?: string;
-      token?: string;
-    } = res.data;
+    const data: signInResTypes = res.data;
     return data;
   } catch (error) {
     console.log(error);

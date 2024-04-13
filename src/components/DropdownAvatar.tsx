@@ -13,10 +13,8 @@ import auth from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { authRunAtom } from "../store/atom";
-export interface DropdownAvatarProps {
-  dropDownItems: { title: string; href: string }[];
-  image?: string;
-}
+import { DropdownAvatarProps } from "../types/dropdownAvatar_types";
+
 
 
 export default function DropdownAvatar({

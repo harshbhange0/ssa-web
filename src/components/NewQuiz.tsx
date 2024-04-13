@@ -3,27 +3,35 @@ import axios from "axios";
 import { useState } from "react";
 import BootStrapInput from "./BootStrapInput";
 import { toast } from "react-toastify";
-interface NewQuizType {
-  quizTitle: string;
-  adminId: string;
-  subject: string;
-  quizTotalMarks: number;
-  quizTime: string;
-}
+import { NewQuizType } from "../types/quiz_types";
+
 export default function NewQuiz() {
   const [newQuiz, setNewQuiz] = useState<NewQuizType>({
     quizTitle: "",
     adminId: localStorage.getItem("id") || "",
     subject: "",
     quizTotalMarks: 0,
-    quizTime: "",
   });
-  
+  const [qTimeAndDate, setQuizTimeAndDate] = useState({ time: "", date: "" });
   const createQuiz = async () => {
+    if (
+      newQuiz.quizTitle == "" ||
+      newQuiz.subject == "" ||
+      newQuiz.quizTotalMarks == 0
+    ) {
+      toast.error("Please fill all the fields");
+      return;
+    }
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}quiz/unsolved/create/quiz`,
-        { ...newQuiz },
+        {
+          quizTitle: newQuiz.quizTitle,
+          adminId: newQuiz.adminId,
+          subject: newQuiz.subject,
+          quizTotalMarks: newQuiz.quizTotalMarks,
+          quizTime: qTimeAndDate.date + qTimeAndDate.time,
+        },
         {
           headers: {
             Authorization: localStorage.getItem("authorization"),
@@ -38,13 +46,21 @@ export default function NewQuiz() {
           adminId: "",
           subject: "",
           quizTotalMarks: 0,
-          quizTime: "",
         });
+        setQuizTimeAndDate({ time: "", date: "" });
       }
     } catch (error) {
+      setNewQuiz({
+        quizTitle: "",
+        adminId: "",
+        subject: "",
+        quizTotalMarks: 0,
+      });
+      setQuizTimeAndDate({ time: "", date: "" });
       console.log(error);
     }
   };
+
   return (
     <Container
       maxWidth={"md"}
@@ -69,29 +85,33 @@ export default function NewQuiz() {
         label={"Quiz Subject"}
         value={newQuiz.subject}
         setValue={(e) => setNewQuiz({ ...newQuiz, subject: e.target.value })}
-      />{" "}
+      />
       <div className="flex items-center justify-center gap-4">
         <BootStrapInput
           type="date"
-          label={"Quiz Time"}
-          value={newQuiz.quizTime}
-          setValue={(e) => setNewQuiz({ ...newQuiz, quizTime: e.target.value })}
+          label={"Quiz Start Date"}
+          value={qTimeAndDate.date}
+          setValue={(e) =>
+            setQuizTimeAndDate({ ...qTimeAndDate, date: e.target.value })
+          }
         />
         <BootStrapInput
           type="time"
-          label={"Quiz Time"}
-          value={newQuiz.quizTime}
-          setValue={(e) => setNewQuiz({ ...newQuiz, quizTime: e.target.value })}
+          label={"Quiz Start Time"}
+          value={qTimeAndDate.time}
+          setValue={(e) =>
+            setQuizTimeAndDate({ ...qTimeAndDate, time: e.target.value })
+          }
+        />
+        <BootStrapInput
+          type="number"
+          label={"Quiz Total Mark"}
+          value={newQuiz.quizTotalMarks}
+          setValue={(e) =>
+            setNewQuiz({ ...newQuiz, quizTotalMarks: parseInt(e.target.value) })
+          }
         />
       </div>
-      <BootStrapInput
-        type="number"
-        label={"Quiz Total Mark"}
-        value={newQuiz.quizTotalMarks}
-        setValue={(e) =>
-          setNewQuiz({ ...newQuiz, quizTotalMarks: parseInt(e.target.value) })
-        }
-      />
       <div>
         <Button onClick={createQuiz}>Add Quiz</Button>
       </div>

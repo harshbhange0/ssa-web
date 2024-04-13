@@ -1,60 +1,13 @@
-import { styled } from "@mui/material/styles";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary, {
-  AccordionSummaryProps,
-} from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { Fragment, useState } from "react";
-import QuestionCard from "./QuestinCard";
-import { Divider } from "@mui/material";
+import QuestionCard from "./QuestionCard";
+import { getDateAndTime } from "../utils/time";
+import { Accordion, AccordionDetails, AccordionSummary } from "./ui/AccordionStyles";
+import { QueProps, QuizProps } from "../types/quiz_types";
 
-const Accordion = styled((props: AccordionProps) => (
-  <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  margin: " .5rem 0",
-  "&::before": {
-    display: "none",
-  },
-}));
 
-const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
-    {...props}
-  />
-))(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#fff" : "#fff",
-  flexDirection: "row-reverse",
-  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-    transform: "rotate(90deg)",
-  },
-  "& .MuiAccordionSummary-content": {
-    marginLeft: theme.spacing(1),
-  },
-}));
 
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderTop: "1px solid rgba(0, 0, 0, .125)",
-}));
-
-interface QuizProps {
-  title: string;
-  date: string;
-  subject: string;
-  quizId: string;
-  questions: {
-    question: string;
-    options: string[];
-    answerIndex: number;
-    _id: string;
-  }[];
-}
-
-const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
+const QuizCard = ({ title, date, subject, questions }: QuizProps) => {
   const [expanded, setExpanded] = useState<string | false>("panel1");
 
   const handleChange =
@@ -62,7 +15,8 @@ const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
       setExpanded(newExpanded ? panel : false);
       event;
     };
-  quizId;
+  const fdate = getDateAndTime(date);
+
   return (
     <Accordion
       expanded={expanded === "panel2"}
@@ -75,28 +29,25 @@ const QuizCard = ({ title, date, subject, quizId, questions }: QuizProps) => {
           </Typography>
           <div className="grid grid-cols-2 gap-1 capitalize">
             <Typography>{subject}</Typography>
-            <Typography>{date}</Typography>
+            <Typography>{fdate}</Typography>
           </div>
         </div>
       </AccordionSummary>
       <AccordionDetails
         sx={{ gap: 2, display: "flex", flexDirection: "column" }}
       >
-        {questions.map((q, i) => {
-          return (
-            <Fragment key={q._id}>
-              <QuestionCard
-                qIndex={i}
-                lastQuestion={questions.length - i == 1 ? true : false}
-                answerIndex={q.answerIndex}
-                options={q.options}
-                question={q.question}
-                key={q._id}
-              />
-              <Divider />
-            </Fragment>
-          );
-        })}
+        {questions.map((q: QueProps, i: any) => (
+          <Fragment key={q._id}>
+            <QuestionCard
+              qIndex={i}
+              lastQuestion={questions.length - i === 1}
+              answerIndex={q.answerIndex}
+              options={q.options}
+              question={q.question}
+              key={q._id}
+            />
+          </Fragment>
+        ))}
       </AccordionDetails>
     </Accordion>
   );

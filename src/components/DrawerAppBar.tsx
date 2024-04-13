@@ -16,18 +16,11 @@ import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
 import axios from "axios";
-
-
-interface Props {
-  navItems: { title: string; href: string }[];
-  dropDownItems: { title: string; href: string }[];
-  defaultNavItem: { title: string; href: string }[];
-  window?: () => Window;
-}
+import { DrawerAppBarProps } from "../types/appbar_types";
 
 const drawerWidth = 240;
 
-export default function DrawerAppBar(props: Props) {
+export default function DrawerAppBar(props: DrawerAppBarProps) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [user, setUser] = React.useState({
@@ -144,7 +137,6 @@ export default function DrawerAppBar(props: Props) {
 
           {auth && (
             <div className="flex items-center justify-between gap-x-5">
-           
               <DropdownAvatar
                 image={user.image}
                 dropDownItems={props.dropDownItems}
