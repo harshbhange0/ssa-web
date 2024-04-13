@@ -4,10 +4,7 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -17,6 +14,7 @@ import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
 import axios from "axios";
 import { DrawerAppBarProps } from "../types/appbar_types";
+import { AppBarDrawer } from "./ui/appbarStyles";
 
 const drawerWidth = 240;
 
@@ -58,34 +56,6 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
   React.useEffect(() => {
     getUser();
   }, [auth]);
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        SSA
-      </Typography>
-      <List>
-        {auth
-          ? props.navItems?.map((item, i) => (
-              <ListItem key={i} disablePadding>
-                <Link to={item.href}>
-                  <ListItemButton sx={{ textAlign: "center" }}>
-                    <ListItemText primary={item.title} />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))
-          : props.defaultNavItem?.map((item, i) => (
-              <ListItem key={i} disablePadding>
-                <Link to={item.href}>
-                  <ListItemButton sx={{ textAlign: "center" }}>
-                    <ListItemText primary={item.title} />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
-      </List>
-    </Box>
-  );
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -163,7 +133,11 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
             },
           }}
         >
-          {drawer}
+          <AppBarDrawer
+            navItems={props.navItems}
+            defaultNavItem={props.defaultNavItem}
+            handleDrawerToggle={handleDrawerToggle}
+          />
         </Drawer>
       </nav>
     </>

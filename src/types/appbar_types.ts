@@ -5,3 +5,13 @@ export interface DrawerAppBarProps {
   window?: () => Window;
 }
 
+export interface itemType {
+  title: string;
+  href: string;
+}
+
+export interface DrawerProps {
+  navItems: itemType[];
+  defaultNavItem: itemType[];
+  handleDrawerToggle: () => void;
+}
