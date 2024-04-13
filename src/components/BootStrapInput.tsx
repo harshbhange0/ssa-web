@@ -1,10 +1,10 @@
-
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { BootStrapInputProps } from "../types/bootStrapInput_types";
 import { BootstrapInput } from "./ui/bootstrapStyles";
 
 export default function BootStrapInput({
+  error,
   value,
   setValue,
   label,
@@ -12,11 +12,12 @@ export default function BootStrapInput({
 }: BootStrapInputProps) {
   return (
     <>
-      <FormControl variant="standard">
+      <FormControl variant="standard" error={error}>
         <InputLabel shrink htmlFor="bootstrap-input">
           {label}
         </InputLabel>
         <BootstrapInput
+          error={error}
           sx={{ Width: "100%" }}
           autoComplete="off"
           autoCapitalize="on"
@@ -29,4 +30,3 @@ export default function BootStrapInput({
     </>
   );
 }
-

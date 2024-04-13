@@ -13,8 +13,8 @@ import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
 import axios from "axios";
-import { DrawerAppBarProps } from "../types/appbar_types";
-import { AppBarDrawer } from "./ui/appbarStyles";
+import { DrawerAppBarProps, itemType } from "../types/appbar_types";
+import { SideDrawer } from "./ui/appbarStyles";
 
 const drawerWidth = 240;
 
@@ -41,9 +41,9 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
         if (res.data) {
           const r = res.data.data;
           return setUser({
-            email: r.email,
-            name: r.name,
-            image: r.image,
+            email: r?.email,
+            name: r?.name,
+            image: r?.image,
           });
         }
       } catch (error) {
@@ -56,6 +56,7 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
   React.useEffect(() => {
     getUser();
   }, [auth]);
+  console.log("DrawerAppBar.tsx", auth);
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -80,31 +81,21 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
           >
             <MenuIcon />
           </IconButton>
+          {/* top bar  */}
+
           <Typography variant="h6" sx={{ my: 2, color: "#000" }}>
             SSA
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {!auth
               ? props?.navItems.map((item, i) => (
-                  <Link key={i} to={item.href}>
-                    <Button
-                      sx={{ color: "black", textTransform: "capitalize" }}
-                    >
-                      {item.title}
-                    </Button>
-                  </Link>
+                  <NavLinks key={i} title={item.title} href={item.href} />
                 ))
               : props?.defaultNavItem.map((item, i) => (
-                  <Link key={i} to={item.href}>
-                    <Button
-                      sx={{ color: "black", textTransform: "capitalize" }}
-                    >
-                      {item.title}
-                    </Button>
-                  </Link>
+                  <NavLinks key={i} title={item.title} href={item.href} />
                 ))}
           </Box>
-
+          {/* Avatar */}
           {auth && (
             <div className="flex items-center justify-between gap-x-5">
               <DropdownAvatar
@@ -115,7 +106,7 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
           )}
         </Toolbar>
       </AppBar>
-
+      {/* side drawer */}
       <nav>
         <Drawer
           container={container}
@@ -123,7 +114,7 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
@@ -133,7 +124,7 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
             },
           }}
         >
-          <AppBarDrawer
+          <SideDrawer
             navItems={props.navItems}
             defaultNavItem={props.defaultNavItem}
             handleDrawerToggle={handleDrawerToggle}
@@ -143,3 +134,15 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
     </>
   );
 }
+
+const NavLinks = ({ title, href }: itemType) => {
+  return (
+    <>
+      <Link to={href}>
+        <Button sx={{ color: "black", textTransform: "capitalize" }}>
+          {title}
+        </Button>
+      </Link>
+    </>
+  );
+};

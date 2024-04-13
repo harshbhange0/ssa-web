@@ -15,8 +15,6 @@ import { useRecoilState } from "recoil";
 import { authRunAtom } from "../store/atom";
 import { DropdownAvatarProps } from "../types/dropdownAvatar_types";
 
-
-
 export default function DropdownAvatar({
   dropDownItems,
   image,
@@ -32,6 +30,8 @@ export default function DropdownAvatar({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  console.log(image);
+
   return (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

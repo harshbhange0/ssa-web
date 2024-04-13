@@ -1,4 +1,5 @@
- export interface BootStrapInputProps {
+export interface BootStrapInputProps {
+   error:boolean
   label: string;
   value: string | number;
   setValue:

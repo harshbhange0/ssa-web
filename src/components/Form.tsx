@@ -8,16 +8,9 @@ import { authRunAtom } from "../store/atom";
 import { UserInputs, fromProps, userSchema } from "../types/form_types";
 
 import FormInputs from "./FormInputs";
+import errorTimer from "../utils/errorTimer";
 
 export default function Form({ type, title }: fromProps) {
-  const errorTime = () => {
-    setE(true);
-    setTimeout(() => {
-      setE(false);
-    }, 2000);
-    setL(false);
-  };
-
   const [l, setL] = useState(false);
   const [e, setE] = useState(false);
 
@@ -34,7 +27,7 @@ export default function Form({ type, title }: fromProps) {
     setL(true);
     const outPut = userSchema.safeParse(user);
     if (!outPut.success) {
-      errorTime();
+      errorTimer(setE, setL);
       return betterZodError(outPut.error);
     }
     try {
@@ -46,7 +39,7 @@ export default function Form({ type, title }: fromProps) {
       });
       if (res?.data == null) {
         toast.error(res?.msg);
-        errorTime();
+        errorTimer(setE, setL);
         return navigate("/auth/admin/sign-in");
       }
       setUser({ email: "", name: "", authKey: "" });
@@ -58,7 +51,7 @@ export default function Form({ type, title }: fromProps) {
       setL(false);
       return setAuthRun(!authRun);
     } catch (error) {
-      errorTime();
+      errorTimer(setE, setL);
       console.log(error);
       return setUser({ email: "", name: "", authKey: "" });
     }

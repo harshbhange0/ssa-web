@@ -7,38 +7,41 @@ import { useAuth } from "../../store/hooks";
 import { Link } from "react-router-dom";
 import { DrawerProps, itemType } from "../../types/appbar_types";
 
-export const AppBarDrawer = ({
+export const SideDrawer = ({
   navItems,
   defaultNavItem,
   handleDrawerToggle,
 }: DrawerProps) => {
   const auth = useAuth();
   return (
+    /** side drawer */
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        SSA
+        SSA 
       </Typography>
       <List>
-        {auth
+        {/*  side drawer items  */}
+        {!auth
           ? navItems?.map((item: itemType, i: any) => (
-              <ListItem key={i} disablePadding>
-                <Link to={item.href}>
-                  <ListItemButton sx={{ textAlign: "center" }}>
-                    <ListItemText primary={item.title} />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
+              <SideDrawerItem key={i} title={item.title} href={item.href} />
             ))
           : defaultNavItem?.map((item: itemType, i: any) => (
-              <ListItem key={i} disablePadding>
-                <Link to={item.href}>
-                  <ListItemButton sx={{ textAlign: "center" }}>
-                    <ListItemText primary={item.title} />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
+              <SideDrawerItem key={i} title={item.title} href={item.href} />
             ))}
       </List>
     </Box>
+  );
+};
+const SideDrawerItem = ({ title, href }: itemType) => {
+  return (
+    <>
+      <ListItem disablePadding>
+        <Link to={href}>
+          <ListItemButton sx={{ textAlign: "center" }}>
+            <ListItemText primary={title} />
+          </ListItemButton>
+        </Link>
+      </ListItem>
+    </>
   );
 };

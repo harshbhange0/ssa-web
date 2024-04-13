@@ -5,8 +5,8 @@ import { Button, Container, Typography } from "@mui/material";
 import QuizCard from "../../components/QuezCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import NewQuiz from "../../components/NewQuiz";
 import { QuizType } from "../../types/quizCard";
+import NewQuiz from "../../components/NewQuiz";
 
 function Quiz() {
   const [quiz, setQuiz] = useState<QuizType[]>([]);

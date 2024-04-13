@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { InputsProps } from "../types/form_types";
 import SignLink from "./SignLink";
+import { useId } from "react";
 
 const FormInputs = ({
   type,
@@ -15,6 +16,7 @@ const FormInputs = ({
   setAuthKey,
   authKey,
 }: InputsProps) => {
+  const id = useId();
   return (
     <Box
       onSubmit={onClick}
@@ -40,7 +42,7 @@ const FormInputs = ({
       <TextField
         type="email"
         required
-        id="outlined-required"
+        id={id+1}
         label="Email"
         autoComplete="off"
         value={email}
@@ -51,7 +53,7 @@ const FormInputs = ({
         <TextField
           type="text"
           required
-          id="outlined-required"
+          id={id+3}
           autoComplete="off"
           label="name"
           value={name}
@@ -62,7 +64,7 @@ const FormInputs = ({
       <TextField
         type="password"
         required
-        id="outlined-required"
+        id={id+2}
         autoComplete="off"
         label="Auth Key"
         value={authKey}

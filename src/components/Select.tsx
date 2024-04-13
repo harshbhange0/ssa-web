@@ -5,29 +5,39 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-export default function SelectComp() {
-  const [age, setAge] = React.useState("");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
-  };
+export default function SelectComp({
+  options,
+  handleChange,
+  value,
+  label,
+  error
+}: {
+  label: string;
+  value: string;
+  handleChange: (event: SelectChangeEvent) => void;
+    options: string[];
+  error:boolean
+}) {
   return (
     <div>
-      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-        <InputLabel id="demo-select-small-label">Age</InputLabel>
+      <FormControl sx={{ width: "auto", minWidth: "200px" }} size="small">
+        <InputLabel id="demo-select-small-label  " error={error}>{label}</InputLabel>
         <Select
           labelId="demo-select-small-label"
           id="demo-select-small"
-          value={age}
-          label="Age"
+          value={value}
+          label={label}
           onChange={handleChange}
         >
           <MenuItem value="">
-            <em>None</em>
+            <>None</>
           </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {options &&
+            options.map((value: string, i: any) => (
+              <MenuItem key={i} value={value}>
+                {value}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
     </div>

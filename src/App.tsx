@@ -1,6 +1,6 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import SignComponent from "./pages/auth";
-import { Slide, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, LinearProgress } from "@mui/material";
 import DrawerAppBar from "./components/DrawerAppBar";
@@ -13,18 +13,19 @@ import { useAuthRun } from "./store/hooks";
 import Profile from "./pages/profile";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/dashboard";
+import { itemType } from "./types/appbar_types";
 
 export default function App() {
   const [auth, setAuth] = useRecoilState(authAtom);
   const userType = localStorage.getItem("userType")?.toLowerCase();
-  const dropDownItems: { title: string; href: string }[] = [
+  const dropDownItems: itemType[] = [
     {
       title: "Profile",
       href: `/profile/${userType}`,
     },
   ];
 
-  const navItem: { title: string; href: string }[] = [
+  const navItem: itemType[] = [
     { title: "Home", href: "/" },
     {
       title: userType == "admin" ? userType : "Admin",
@@ -35,7 +36,7 @@ export default function App() {
       href: "/auth/student/sign-up",
     },
   ];
-  const defaultNavItem: { title: string; href: string }[] = [
+  const defaultNavItem: itemType[] = [
     {
       title: "Home",
       href: "/",
@@ -43,6 +44,7 @@ export default function App() {
     { title: "Dashboard", href: `/${userType}/dashboard` },
     { title: "Quiz", href: `/${userType}/quiz` },
   ];
+
   const type = localStorage.getItem("userType");
   const [loading, setLoading] = useState<boolean>(true);
   const getAuth = async () => {
@@ -61,7 +63,13 @@ export default function App() {
           },
         },
       );
-      setAuth(res.data.data.auth);
+      setAuth(res.data?.data?.auth);
+      if (res.data.msg == "jwt expired") {
+        toast.warn("Pleas Sing In");
+        localStorage.removeItem("authorization");
+        localStorage.removeItem("userType");
+        return;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -73,6 +81,8 @@ export default function App() {
       setLoading(false);
     }, 1000);
   }, [authRun]);
+
+  console.log("app.tsx", auth);
 
   return (
     <>
@@ -89,7 +99,7 @@ export default function App() {
         theme="light"
         transition={Slide}
       />
-      <Box component={"div"} sx={{ width: "100%",}}>
+      <Box component={"div"} sx={{ width: "100%" }}>
         <DrawerAppBar
           defaultNavItem={defaultNavItem}
           navItems={navItem}
@@ -113,6 +123,10 @@ export default function App() {
               <Route
                 path="/:type/dashboard/:subject?"
                 element={<Dashboard />}
+              />
+              <Route
+                path={`/${type == "admin" ? "student" : "admin"}/*`}
+                element={<div>Not Found</div>}
               />
             </Routes>
           </>

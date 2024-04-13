@@ -1,9 +1,11 @@
-import { Button, Container } from "@mui/material";
+import { Button, Container, SelectChangeEvent } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import BootStrapInput from "./BootStrapInput";
 import { toast } from "react-toastify";
 import { NewQuizType } from "../types/quiz_types";
+import SelectComp from "./Select";
+import errorTimer from "../utils/errorTimer";
 
 export default function NewQuiz() {
   const [newQuiz, setNewQuiz] = useState<NewQuizType>({
@@ -13,12 +15,18 @@ export default function NewQuiz() {
     quizTotalMarks: 0,
   });
   const [qTimeAndDate, setQuizTimeAndDate] = useState({ time: "", date: "" });
+  const [error, setError] = useState<boolean>(false);
+  const handleChange = (e: SelectChangeEvent) => {
+    setNewQuiz({ ...newQuiz, subject: e.target.value });
+  };
+
   const createQuiz = async () => {
     if (
       newQuiz.quizTitle == "" ||
       newQuiz.subject == "" ||
       newQuiz.quizTotalMarks == 0
     ) {
+      errorTimer(setError);
       toast.error("Please fill all the fields");
       return;
     }
@@ -75,19 +83,24 @@ export default function NewQuiz() {
       component={"section"}
     >
       <BootStrapInput
+        error={error}
         type="text"
         label={"Quiz Title"}
         value={newQuiz.quizTitle}
         setValue={(e) => setNewQuiz({ ...newQuiz, quizTitle: e.target.value })}
       />{" "}
-      <BootStrapInput
-        type="text"
-        label={"Quiz Subject"}
-        value={newQuiz.subject}
-        setValue={(e) => setNewQuiz({ ...newQuiz, subject: e.target.value })}
-      />
+      <div className="mx-auto">
+        <SelectComp
+          error={error}
+          label="Subject"
+          options={["Math", "English", "Science"]}
+          handleChange={handleChange}
+          value={newQuiz.subject}
+        />
+      </div>
       <div className="flex items-center justify-center gap-4">
         <BootStrapInput
+          error={error}
           type="date"
           label={"Quiz Start Date"}
           value={qTimeAndDate.date}
@@ -96,6 +109,7 @@ export default function NewQuiz() {
           }
         />
         <BootStrapInput
+          error={error}
           type="time"
           label={"Quiz Start Time"}
           value={qTimeAndDate.time}
@@ -105,6 +119,7 @@ export default function NewQuiz() {
         />
         <BootStrapInput
           type="number"
+          error={error}
           label={"Quiz Total Mark"}
           value={newQuiz.quizTotalMarks}
           setValue={(e) =>
@@ -112,8 +127,10 @@ export default function NewQuiz() {
           }
         />
       </div>
-      <div>
-        <Button onClick={createQuiz}>Add Quiz</Button>
+      <div className="flex w-full items-center justify-center">
+        <Button sx={{ margin: "auto" }} onClick={createQuiz}>
+          Add Quiz
+        </Button>
       </div>
     </Container>
   );
