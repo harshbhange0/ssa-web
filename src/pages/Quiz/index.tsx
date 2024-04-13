@@ -6,30 +6,7 @@ import QuizCard from "../../components/QuezCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import NewQuiz from "../../components/NewQuiz";
-interface QuizQuestionType {
-  _id: string;
-  question: string;
-  options: string[];
-  answerIndex: number;
-  quizId: string;
-  createdAt: string;
-  updatedAt?: string;
-  __v?: number;
-}
-[];
-interface QuizType {
-  _id: string;
-  quizTitle: string;
-  adminId: string;
-  subject: string;
-  quizTotalMarks: number;
-  questions: QuizQuestionType[];
-  quizTime: string;
-  createdAt: string;
-  updatedAt?: string;
-  __v?: number;
-}
-[];
+import { QuizType } from "../../types/quizCard";
 
 function Quiz() {
   const [quiz, setQuiz] = useState<QuizType[]>([]);
@@ -63,7 +40,9 @@ function Quiz() {
         <div className="flex flex-col justify-center">
           {quiz && addNewQuiz ? (
             <>
-              <Typography variant="h4" sx={{textAlign:"center" ,mb:3}} >Add New Quiz</Typography>
+              <Typography variant="h4" sx={{ textAlign: "center", mb: 3 }}>
+                Add New Quiz
+              </Typography>
               <NewQuiz />
             </>
           ) : (
