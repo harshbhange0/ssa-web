@@ -1,4 +1,3 @@
-
 import { CreateQuizTypes } from "../utils/quizActions";
 import { Link } from "react-router-dom";
 
@@ -14,6 +13,8 @@ export default function QuizItem({
   quizTotalMarks,
   subject,
 }: QuizItemProps) {
+  quizTime;
+  quizTotalMarks;
   return (
     <div className="quiz_item flex w-[60%] flex-col items-center justify-between gap-2 rounded-md px-4 py-2  shadow">
       <Link to={`/admin/quiz/full/${_id}`} className="w-full">

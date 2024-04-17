@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import Button, { ButtonProps } from "@mui/material/Button";
+import Button from "@mui/material/Button";
 
 export const CostumeButton = styled(Button)({
   color: "#000",

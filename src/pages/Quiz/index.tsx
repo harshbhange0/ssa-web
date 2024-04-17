@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { Container, Typography } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getQuiz } from "../../utils/quizActions";
 import QuizCard from "../../components/QuizCard";
 import QuizItem, { QuizItemProps } from "../../components/QuizItem";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 
 export default function Quiz() {
@@ -19,7 +18,7 @@ export default function Quiz() {
     }
     return setLoading(false);
   }, []);
-  const { subject } = useParams();
+  // const { subject } = useParams();
   useEffect(() => {
     getAllQuiz();
   }, []);
