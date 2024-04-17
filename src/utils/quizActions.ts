@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const getId = () => localStorage.getItem("id");
 
@@ -51,6 +52,7 @@ export const createQuiz = async ({
           },
         },
       );
+
       return response.data;
     }
   } catch (error) {
@@ -93,6 +95,43 @@ export const getQuizById = async (_id: string) => {
       },
     });
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteQuiz = async (id: string) => {
+  
+  try {
+    if (id) {
+      const response = await axios.delete(
+        `${baseUrl}quiz/unsolved/admin/delete/quiz/${id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("authorization"),
+          },
+        },
+      );
+   
+      return response.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const deleteQuestion = async (id: string) => {
+  try {
+    if (id) {
+      const response = await axios.delete(
+        `${baseUrl}quiz/unsolved/admin/delete/Question/${id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("authorization"),
+          },
+        },
+      );
+      return response.data;
+    }
   } catch (error) {
     console.log(error);
   }

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getQuiz } from "../../utils/quizActions";
 import QuizCard from "../../components/QuizCard";
 import QuizItem, { QuizItemProps } from "../../components/QuizItem";
-
+import { useUpdateQuiz } from "../../store/hooks";
 
 export default function Quiz() {
   const [loading, setLoading] = useState(false);
@@ -19,15 +19,21 @@ export default function Quiz() {
     return setLoading(false);
   }, []);
   // const { subject } = useParams();
+  const run = useUpdateQuiz();
+  useEffect(() => {
+    getAllQuiz();
+  }, [run]);
   useEffect(() => {
     getAllQuiz();
   }, []);
-
   const [quizzes, setQuizzes] = useState<QuizItemProps[]>([]);
+  
+  
   const getAllQuiz = async () => {
     setLoading(true);
     const res = await getQuiz();
     setQuizzes(res.data);
+    console.log("run");
     setLoading(false);
   };
   return loading ? (
@@ -55,7 +61,7 @@ export default function Quiz() {
                 />
               ))}
               <div className="absolute bottom-10">
-                <QuizCard type="add"  />
+                <QuizCard type="add" />
               </div>
             </div>
           )}

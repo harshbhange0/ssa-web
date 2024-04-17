@@ -107,7 +107,7 @@ export default function App() {
         />
         <Box
           component="div"
-          sx={{ pt: { xs: "64px" }, height: "100%", width: "100%" }}
+          sx={{ pt: { xs: "64px" }, height: "100%", width: "100%",minWidth:"980px" }}
         >
           {loading && (
             <Box sx={{ width: "100%", position: "absolute", top: "64px" }}>

@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import {
   CreateQuizTypes,
   createQuiz,
+  deleteQuiz,
   getQuizById,
   updateQuiz,
 } from "../utils/quizActions";
@@ -17,6 +18,8 @@ import SystemUpdateAltOutlinedIcon from "@mui/icons-material/SystemUpdateAltOutl
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import { CostumeButton } from "./ui/Button";
+import { updateQuizAtom } from "../store/atom";
+import { useRecoilState } from "recoil";
 
 export default function QuizDialog({
   type,
@@ -25,11 +28,7 @@ export default function QuizDialog({
   _id?: string;
   type: "add" | "update" | "delete";
 }) {
-  useEffect(() => {
-    if (_id) {
-      getQuiz();
-    }
-  }, []);
+  const [run, setRun] = useRecoilState(updateQuizAtom);
   const [quiz, setQuiz] = useState<CreateQuizTypes>({
     quizTime: "",
     quizTitle: "",
@@ -39,6 +38,9 @@ export default function QuizDialog({
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
+    if (type == "update") {
+      getQuiz();
+    }
     setOpen(true);
   };
 
@@ -59,6 +61,8 @@ export default function QuizDialog({
   const OnAddNewQuiz = async () => {
     try {
       const res = await createQuiz(quiz);
+      setRun(!run);
+
       localStorage.setItem("quizId", res?.data);
     } catch (error) {
       console.log(error);
@@ -68,7 +72,19 @@ export default function QuizDialog({
     try {
       if (_id) {
         const res = await updateQuiz(quiz, _id);
+        setRun(!run);
         localStorage.setItem("quizId", res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const OnDelete = async () => {
+    try {
+      if (_id) {
+        const res = await deleteQuiz(_id);
+        setRun(!run);
+        console.log(res);
       }
     } catch (error) {
       console.log(error);
@@ -112,6 +128,10 @@ export default function QuizDialog({
               OnUpdate();
               return handleClose();
             }
+            if (type == "delete") {
+              OnDelete();
+              return handleClose();
+            }
             return handleClose();
           },
         }}
@@ -131,7 +151,7 @@ export default function QuizDialog({
               </Typography>
             )}
           </DialogContentText>
-          {type == "add" && "update" && (
+          {type !== "delete" && (
             <>
               <TextField
                 value={quiz.quizTitle}
@@ -215,7 +235,6 @@ export default function QuizDialog({
                 <SystemUpdateAltOutlinedIcon />
               )
             }
-            
             type="submit"
           >
             {type}
