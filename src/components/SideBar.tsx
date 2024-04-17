@@ -8,8 +8,6 @@ import { Divider } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { DrawerHeader } from "./ui/SideBarStyles";
 
-
-
 export default function SideBar() {
   const location = useLocation();
   const pageType = location.pathname.includes("dashboard")
@@ -17,6 +15,7 @@ export default function SideBar() {
     : "quiz";
   const type = localStorage.getItem("userType")?.toLocaleLowerCase();
   const sideBarItem: { title: string; href: string }[] = [
+    { title: "Home", href: `/admin/${pageType}` },
     { title: "English", href: `/${type}/${pageType}/english` },
     { title: "Math", href: `/${type}/${pageType}/math` },
     { title: "Marathi", href: `/${type}/${pageType}/marathi` },

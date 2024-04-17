@@ -13,3 +13,8 @@ export const sideOpenAtom = atom({
   key: "sideOpen",
   default: false,
 });
+
+export const updateQuizAtom = atom({
+  key: "updateQuiz",
+  default: false
+})

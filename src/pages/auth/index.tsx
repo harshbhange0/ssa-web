@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import Form from "../../components/Form";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { SignInWithGoogle } from "../../firebase/firebase.config";
 import { authRunAtom } from "../../store/atom";
 import { useRecoilState } from "recoil";
+import { CostumeButton } from "../../components/ui/Button";
 
 export default function SignComponent() {
   const { id, type } = useParams();
@@ -15,7 +16,7 @@ export default function SignComponent() {
         component={"div"}
         className="grid h-[calc(100vh-56px)] w-full place-items-center sm:h-[calc(100vh-64px)]"
       >
-        <Button
+        <CostumeButton
           sx={{
             color: " rgb(55 65 81)",
             border: "0.1rem solid rgb(231 229 228);",
@@ -31,7 +32,7 @@ export default function SignComponent() {
             <img src="/google.png" alt="google" className="h-full w-full" />
           </div>
           Sign With Google
-        </Button>
+        </CostumeButton>
       </Box>
     </>
   ) : (

@@ -2,6 +2,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { InputsProps } from "../types/form_types";
 import SignLink from "./SignLink";
 import { useId } from "react";
+import { CostumeButton } from "./ui/Button";
 
 const FormInputs = ({
   type,
@@ -71,14 +72,14 @@ const FormInputs = ({
         onChange={setAuthKey}
         error={error}
       />
-      <Button
+      <CostumeButton
         type="submit"
         variant="outlined"
         disabled={loading}
         sx={{ mx: "auto", px: 3, pt: 1 }}
       >
         {type == "sign-in" ? "Sign In" : "Sign Up"}
-      </Button>
+      </CostumeButton>
       <div>
         <SignLink type={type} />
       </div>

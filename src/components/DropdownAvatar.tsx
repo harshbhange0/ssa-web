@@ -30,7 +30,7 @@ export default function DropdownAvatar({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log(image);
+  
 
   return (
     <Box sx={{ flexGrow: 0 }}>

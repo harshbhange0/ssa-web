@@ -8,13 +8,13 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
 import { useAuth } from "../store/hooks";
 import axios from "axios";
 import { DrawerAppBarProps, itemType } from "../types/appbar_types";
 import { SideDrawer } from "./ui/appbarStyles";
+import { CostumeButton } from "./ui/Button";
 
 const drawerWidth = 240;
 
@@ -56,7 +56,7 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
   React.useEffect(() => {
     getUser();
   }, [auth]);
-  console.log("DrawerAppBar.tsx", auth);
+
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -139,9 +139,9 @@ const NavLinks = ({ title, href }: itemType) => {
   return (
     <>
       <Link to={href}>
-        <Button sx={{ color: "black", textTransform: "capitalize" }}>
+        <CostumeButton sx={{ color: "black", textTransform: "capitalize" }}>
           {title}
-        </Button>
+        </CostumeButton>
       </Link>
     </>
   );

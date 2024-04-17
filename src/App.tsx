@@ -14,6 +14,7 @@ import Profile from "./pages/profile";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/dashboard";
 import { itemType } from "./types/appbar_types";
+import DisplayQuiz from "./pages/Quiz/DisplayQuiz";
 
 export default function App() {
   const [auth, setAuth] = useRecoilState(authAtom);
@@ -37,10 +38,7 @@ export default function App() {
     },
   ];
   const defaultNavItem: itemType[] = [
-    {
-      title: "Home",
-      href: "/",
-    },
+    { title: "Home", href: "/" },
     { title: "Dashboard", href: `/${userType}/dashboard` },
     { title: "Quiz", href: `/${userType}/quiz` },
   ];
@@ -72,6 +70,10 @@ export default function App() {
       }
     } catch (error) {
       console.log(error);
+      setAuth(false);
+      localStorage.removeItem("authorization");
+      localStorage.removeItem("userType");
+      localStorage.removeItem("id");
     }
   };
   const authRun = useAuthRun();
@@ -81,8 +83,6 @@ export default function App() {
       setLoading(false);
     }, 1000);
   }, [authRun]);
-
-  console.log("app.tsx", auth);
 
   return (
     <>
@@ -120,14 +120,12 @@ export default function App() {
               <Route path="/auth/:type/:id" element={<SignComponent />} />
               <Route path="/profile/:type" element={<Profile />} />
               <Route path="/:type/quiz/:subject?" element={<Quiz />} />
+              <Route path="/:admin/quiz/full/:_id" element={<DisplayQuiz />} />
               <Route
                 path="/:type/dashboard/:subject?"
                 element={<Dashboard />}
               />
-              <Route
-                path={`/${type == "admin" ? "student" : "admin"}/*`}
-                element={<div>Not Found</div>}
-              />
+              <Route path={`/admin/*`} element={<div>Not Found</div>} />
             </Routes>
           </>
         </Box>

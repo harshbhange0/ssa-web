@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { authAtom, authRunAtom, sideOpenAtom } from "../atom";
+import { authAtom, authRunAtom, sideOpenAtom, updateQuizAtom } from "../atom";
 
 export const useAuth = () => {
   const value = useRecoilValue(authAtom);
@@ -11,6 +11,10 @@ export const useAuthRun = () => {
   return value;
 };
 export const useSideOpen = () => {
-  const value = useRecoilValue(sideOpenAtom)
-  return value
-}
+  const value = useRecoilValue(sideOpenAtom);
+  return value;
+};
+export const useUpdateQuiz = () => {
+  const value = useRecoilValue(updateQuizAtom);
+  return value;
+};
