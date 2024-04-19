@@ -2,14 +2,13 @@ import { useParams } from "react-router-dom";
 import Form from "../../components/Form";
 import { Box } from "@mui/material";
 import { SignInWithGoogle } from "../../firebase/firebase.config";
-import { authRunAtom } from "../../store/atom";
-import { useRecoilState } from "recoil";
 import { CostumeButton } from "../../components/ui/Button";
 
 export default function SignComponent() {
-  const { id, type } = useParams();
-  const [authRun, setAuthRun] = useRecoilState(authRunAtom);
-
+  const {  type } = useParams();
+  if (type) {
+    localStorage.setItem("userType", type);
+  }
   return type == "student" ? (
     <>
       <Box
@@ -24,7 +23,6 @@ export default function SignComponent() {
           className=" flex items-center gap-3"
           onClick={async () => {
             await SignInWithGoogle();
-            setAuthRun(!authRun);
             localStorage.setItem("userType", "Student");
           }}
         >
@@ -37,7 +35,7 @@ export default function SignComponent() {
     </>
   ) : (
     <>
-      <Form title={type} type={id == "sign-up" ? "sign-up" : "sign-in"} />
+      <Form/>
     </>
   );
 }

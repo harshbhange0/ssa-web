@@ -1,23 +1,23 @@
 import { Route, Routes } from "react-router-dom";
 import SignComponent from "./pages/auth";
-import { Slide, ToastContainer, toast } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Box, LinearProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import DrawerAppBar from "./components/DrawerAppBar";
-import { useEffect, useState } from "react";
+
 import Home from "./pages/home";
-import { useRecoilState } from "recoil";
-import { authAtom } from "./store/atom";
-import axios from "axios";
-import { useAuthRun } from "./store/hooks";
+
 import Profile from "./pages/profile";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/dashboard";
 import { itemType } from "./types/appbar_types";
 import DisplayQuiz from "./pages/Quiz/DisplayQuiz";
+import { verify } from "./utils/authAction";
+import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { authAtom } from "./store/atom";
 
 export default function App() {
-  const [auth, setAuth] = useRecoilState(authAtom);
   const userType = localStorage.getItem("userType")?.toLowerCase();
   const dropDownItems: itemType[] = [
     {
@@ -42,48 +42,14 @@ export default function App() {
     { title: "Dashboard", href: `/${userType}/dashboard` },
     { title: "Quiz", href: `/${userType}/quiz` },
   ];
-
-  const type = localStorage.getItem("userType");
-  const [loading, setLoading] = useState<boolean>(true);
-  const getAuth = async () => {
-    const token = localStorage.getItem("authorization");
-
-    try {
-      if (!token) {
-        setAuth(!auth);
-        return;
-      }
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}${type == "Admin" ? "admin" : "user"}/verify`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
-      );
-      setAuth(res.data?.data?.auth);
-      if (res.data.msg == "jwt expired") {
-        toast.warn("Pleas Sing In");
-        localStorage.removeItem("authorization");
-        localStorage.removeItem("userType");
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-      setAuth(false);
-      localStorage.removeItem("authorization");
-      localStorage.removeItem("userType");
-      localStorage.removeItem("id");
-    }
-  };
-  const authRun = useAuthRun();
+  const [auth, setAuth] = useRecoilState(authAtom);
   useEffect(() => {
     getAuth();
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, [authRun]);
-
+  }, []);
+  const getAuth = async () => {
+    const res = await verify();
+    setAuth(res);
+  };
   return (
     <>
       <ToastContainer
@@ -107,25 +73,31 @@ export default function App() {
         />
         <Box
           component="div"
-          sx={{ pt: { xs: "64px" }, height: "100%", width: "100%",minWidth:"980px" }}
+          sx={{ pt: { xs: "64px" }, height: "100%", width: "100%" }}
         >
-          {loading && (
-            <Box sx={{ width: "100%", position: "absolute", top: "64px" }}>
-              <LinearProgress />
-            </Box>
-          )}
+          {/* <Box sx={{ width: "100%", position: "absolute", top: "64px" }}>
+            <LinearProgress />  
+          </Box> */}
           <>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/auth/:type/:id" element={<SignComponent />} />
-              <Route path="/profile/:type" element={<Profile />} />
-              <Route path="/:type/quiz/:subject?" element={<Quiz />} />
-              <Route path="/:admin/quiz/full/:_id" element={<DisplayQuiz />} />
-              <Route
-                path="/:type/dashboard/:subject?"
-                element={<Dashboard />}
-              />
-              <Route path={`/admin/*`} element={<div>Not Found</div>} />
+              {auth && (
+                <>
+                  <Route path="/profile/:type" element={<Profile />} />
+                  <Route path="/:type/quiz/:subject?" element={<Quiz />} />
+                  <Route
+                    path="/:admin/quiz/full/:_id"
+                    element={<DisplayQuiz />}
+                  />
+                  <Route
+                    path="/:type/dashboard/:subject?"
+                    element={<Dashboard />}
+                  />
+                  <Route path={`/admin/*`} element={<div>Not Found</div>} />
+                </>
+              )}
+              <Route path={"/*"} element={<div>Not Found</div>} />
             </Routes>
           </>
         </Box>

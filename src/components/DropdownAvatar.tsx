@@ -12,14 +12,13 @@ import { Link, useNavigate } from "react-router-dom";
 import auth from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
-import { authRunAtom } from "../store/atom";
 import { DropdownAvatarProps } from "../types/dropdownAvatar_types";
+import { authAtom } from "../store/atom";
 
 export default function DropdownAvatar({
   dropDownItems,
   image,
 }: DropdownAvatarProps) {
-  const [authRun, setAuthRun] = useRecoilState(authRunAtom);
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
@@ -30,8 +29,8 @@ export default function DropdownAvatar({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
-
+  //@ts-expect-error
+  const [authr, setAuthR] = useRecoilState(authAtom);
   return (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -85,10 +84,10 @@ export default function DropdownAvatar({
               }
               toast.success("Sign Out Successfully");
               localStorage.removeItem("userType");
-              localStorage.removeItem("authorization");
-              localStorage.removeItem("id");
+              localStorage.removeItem("Authorization");
+              localStorage.removeItem("user");
               navigate("/");
-              setAuthRun(!authRun);
+              setAuthR(false);
               return;
             }}
           >

@@ -1,76 +1,127 @@
+import { Container, Stack, TextField, Typography } from "@mui/material";
+import { CostumeButton } from "./ui/Button";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { Sign } from "../utils/sign";
-import { betterZodError } from "../utils/zodError";
-import { useNavigate } from "react-router-dom";
+import SignMethod, {
+  SignInMethodTypes,
+  signInMethodSchema,
+} from "../utils/authAction";
 import { useRecoilState } from "recoil";
-import { authRunAtom } from "../store/atom";
-import { UserInputs, fromProps, userSchema } from "../types/form_types";
-
-import FormInputs from "./FormInputs";
-import errorTimer from "../utils/errorTimer";
-
-export default function Form({ type, title }: fromProps) {
-  const [l, setL] = useState(false);
-  const [e, setE] = useState(false);
-
-  const [authRun, setAuthRun] = useRecoilState(authRunAtom);
-  const [user, setUser] = useState<UserInputs>({
+import { authAtom } from "../store/atom";
+import { useNavigate } from "react-router-dom";
+export default function Form() {
+  const [isSignIn, setSignIn] = useState<boolean>(false);
+  //@ts-expect-error
+  const [auth, setAuth] = useRecoilState(authAtom);
+  const [user, setUser] = useState<SignInMethodTypes>({
     email: "",
-    name: "",
-    authKey: "",
+    password: "",
   });
+  const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const CreateAdmin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setL(true);
-    const outPut = userSchema.safeParse(user);
-    if (!outPut.success) {
-      errorTimer(setE, setL);
-      return betterZodError(outPut.error);
-    }
     try {
-      const res: any = await Sign({
-        type,
-        email: user.email,
-        name: user.name,
-        authKey: user.authKey,
-      });
-      if (res?.data == null) {
-        toast.error(res?.msg);
-        errorTimer(setE, setL);
-        return navigate("/auth/admin/sign-in");
+      const out = signInMethodSchema.safeParse(user);
+      if (!out.success) {
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 1000);
+        setUser({
+          email: "",
+          password: "",
+        });
+        return;
       }
-      setUser({ email: "", name: "", authKey: "" });
+      const res = await SignMethod({ ...user }, isSignIn);
+      console.log(res?.data.data);
+      localStorage.setItem("Authorization", res?.data.token);
+      localStorage.setItem("user", res?.data.data);
+      setAuth(res?.data.auth);
+      setUser({
+        email: "",
+        password: "",
+      });
       navigate("/");
-      toast.success(res?.msg);
-      localStorage.setItem("id", res.data!);
-      localStorage.setItem("authorization", res?.token!);
-      localStorage.setItem("userType", "Admin");
-      setL(false);
-      return setAuthRun(!authRun);
+      return;
     } catch (error) {
-      errorTimer(setE, setL);
-      console.log(error);
-      return setUser({ email: "", name: "", authKey: "" });
+      setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 1000);
+      setUser({
+        email: "",
+        password: "",
+      });
+      return;
     }
   };
   return (
-    <>
-      <FormInputs
-        title={title!}
-        type={type}
-        error={e}
-        loading={l}
-        email={user.email}
-        name={user.name}
-        authKey={user.authKey}
-        setAuthKey={(e) => setUser({ ...user, authKey: e.target.value })}
-        onClick={(e) => handleSubmit(e)}
-        setName={(e) => setUser({ ...user, name: e.target.value })}
-        setEmail={(e) => setUser({ ...user, email: e.target.value })}
-      />
-    </>
+    <Container
+      component={"div"}
+      className="h-[calc(100vh-64px)] "
+      maxWidth="md"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Stack
+        component="form"
+        sx={{
+          width: "30ch",
+        }}
+        spacing={2}
+        autoComplete="off"
+        onSubmit={(e) => CreateAdmin(e)}
+      >
+        <Typography variant="h4" sx={{ textAlign: "center" }}>
+          Admin Sign {isSignIn ? "In" : "Up"}
+        </Typography>
+
+        <TextField
+          label={"Email"}
+          type="email"
+          size="small"
+          autoComplete="off"
+          value={user?.email}
+          error={error}
+          onChange={(e) => {
+            setUser({ ...user, email: e.target.value });
+          }}
+        />
+        <TextField
+          label={"Password"}
+          type="password"
+          size="small"
+          autoComplete="off"
+          value={user?.password}
+          error={error}
+          onChange={(e) => {
+            setUser({ ...user, password: e.target.value });
+          }}
+        />
+        <CostumeButton
+          type="submit"
+          sx={{ fontSize: "16px", cursor: error ? "not-allowed" : "pointer" }}
+        >
+          Sign {isSignIn ? "In" : "Up"}
+        </CostumeButton>
+        <span className="flex gap-2">
+          {isSignIn ? "Don't Have " : "Already Have "} An Account?{" "}
+          <a
+            href="#"
+            className=" text-blue-600"
+            onClick={(e) => {
+              setSignIn(!isSignIn);
+            }}
+          >
+            Sign
+            {!isSignIn ? " In" : " Up"}
+          </a>
+        </span>
+      </Stack>
+    </Container>
   );
 }

@@ -31,33 +31,7 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
   };
 
   const auth = useAuth();
-  const getUser = async () => {
-    if (localStorage.getItem("userType")) {
-      const id = localStorage.getItem("id");
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}${localStorage.getItem("userType")?.toLowerCase() == "student" ? "user" : "admin"}/user/${id}`,
-        );
-        if (res.data) {
-          const r = res.data.data;
-          return setUser({
-            email: r?.email,
-            name: r?.name,
-            image: r?.image,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      return setUser({ email: "", name: "", image: "" });
-    }
-  };
-  React.useEffect(() => {
-    getUser();
-  }, [auth]);
-
-
+  React.useEffect(() => {}, [auth]);
   const container =
     window !== undefined ? () => window().document.body : undefined;
   return (

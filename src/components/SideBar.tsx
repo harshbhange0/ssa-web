@@ -15,7 +15,7 @@ export default function SideBar() {
     : "quiz";
   const type = localStorage.getItem("userType")?.toLocaleLowerCase();
   const sideBarItem: { title: string; href: string }[] = [
-    { title: "Home", href: `/admin/${pageType}` },
+    { title: "Home", href: `/${type}/${pageType}` },
     { title: "English", href: `/${type}/${pageType}/english` },
     { title: "Math", href: `/${type}/${pageType}/math` },
     { title: "Marathi", href: `/${type}/${pageType}/marathi` },

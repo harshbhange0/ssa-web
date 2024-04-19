@@ -5,13 +5,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import {
-  CreateQuizTypes,
-  createQuiz,
-  deleteQuiz,
-  getQuizById,
-  updateQuiz,
-} from "../utils/quizActions";
 import { Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SystemUpdateAltOutlinedIcon from "@mui/icons-material/SystemUpdateAltOutlined";
@@ -29,7 +22,7 @@ export default function QuizDialog({
   type: "add" | "update" | "delete";
 }) {
   const [run, setRun] = useRecoilState(updateQuizAtom);
-  const [quiz, setQuiz] = useState<CreateQuizTypes>({
+  const [quiz, setQuiz] = useState({
     quizTime: "",
     quizTitle: "",
     quizTotalMarks: 0,
@@ -38,57 +31,11 @@ export default function QuizDialog({
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    if (type == "update") {
-      getQuiz();
-    }
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-  const getQuiz = async () => {
-    try {
-      if (_id) {
-        const res = await getQuizById(_id!);
-        const { quizTime, quizTitle, quizTotalMarks, subject } = res.data;
-        setQuiz({ quizTime, quizTitle, quizTotalMarks, subject });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const OnAddNewQuiz = async () => {
-    try {
-      const res = await createQuiz(quiz);
-      setRun(!run);
-
-      localStorage.setItem("quizId", res?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const OnUpdate = async () => {
-    try {
-      if (_id) {
-        const res = await updateQuiz(quiz, _id);
-        setRun(!run);
-        localStorage.setItem("quizId", res?.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const OnDelete = async () => {
-    try {
-      if (_id) {
-        const res = await deleteQuiz(_id);
-        setRun(!run);
-        console.log(res);
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -120,18 +67,6 @@ export default function QuizDialog({
           component: "form",
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            if (type == "add") {
-              OnAddNewQuiz();
-              return handleClose();
-            }
-            if (type == "update") {
-              OnUpdate();
-              return handleClose();
-            }
-            if (type == "delete") {
-              OnDelete();
-              return handleClose();
-            }
             return handleClose();
           },
         }}

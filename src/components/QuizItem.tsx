@@ -2,6 +2,7 @@ import { CreateQuizTypes } from "../utils/quizActions";
 import { Link } from "react-router-dom";
 
 import QuizDialog from "./QuizDialog";
+import { QuizType } from "../types/quiz_types";
 export interface QuizItemProps extends CreateQuizTypes {
   _id: string;
 }
@@ -12,7 +13,7 @@ export default function QuizItem({
   quizTitle,
   quizTotalMarks,
   subject,
-}: QuizItemProps) {
+}: QuizType) {
   quizTime;
   quizTotalMarks;
   return (
