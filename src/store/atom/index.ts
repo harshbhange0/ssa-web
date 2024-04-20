@@ -11,5 +11,9 @@ export const sideOpenAtom = atom({
 
 export const updateQuizAtom = atom({
   key: "updateQuiz",
-  default: false
-})
+  default: false,
+});
+export const authLoaderAtom = atom({
+  key: "authLoader",
+  default: false,
+});

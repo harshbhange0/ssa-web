@@ -44,5 +44,6 @@ export async function verify() {
     return response.data.data.auth;
   } catch (error: any) {
     throw new AxiosError(error.response.data);
+    
   }
 }

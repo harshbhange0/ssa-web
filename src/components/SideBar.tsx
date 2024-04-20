@@ -24,13 +24,13 @@ export default function SideBar() {
     <Box
       component={"div"}
       sx={{
-        display: "flex",
+        display: { xs:"none", lg:"flex"},
         flexDirection: "column",
         maxWidth: "300px",
         width: "100%",
         boxShadow: "0 0 0.1rem 0 rgba(0, 0, 0, 0.12);",
       }}
-      className="h-[calc(100vh-64px)]"
+      className="h-full"
       pt={2}
     >
       <CssBaseline />

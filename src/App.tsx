@@ -15,9 +15,11 @@ import DisplayQuiz from "./pages/Quiz/DisplayQuiz";
 import { verify } from "./utils/authAction";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { authAtom } from "./store/atom";
+import { authAtom, authLoaderAtom } from "./store/atom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
+  const [loading, setLoading] = useRecoilState(authLoaderAtom);
   const userType = localStorage.getItem("userType")?.toLowerCase();
   const dropDownItems: itemType[] = [
     {
@@ -47,8 +49,15 @@ export default function App() {
     getAuth();
   }, []);
   const getAuth = async () => {
-    const res = await verify();
-    setAuth(res);
+    setLoading(true);
+    try {
+      const res = await verify();
+      setAuth(res);
+      setLoading(false);
+    } catch (error) {
+      setAuth(false);
+      setLoading(false);
+    }
   };
   return (
     <>
@@ -79,26 +88,32 @@ export default function App() {
             <LinearProgress />  
           </Box> */}
           <>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/auth/:type/:id" element={<SignComponent />} />
-              {auth && (
-                <>
-                  <Route path="/profile/:type" element={<Profile />} />
-                  <Route path="/:type/quiz/:subject?" element={<Quiz />} />
-                  <Route
-                    path="/:admin/quiz/full/:_id"
-                    element={<DisplayQuiz />}
-                  />
-                  <Route
-                    path="/:type/dashboard/:subject?"
-                    element={<Dashboard />}
-                  />
-                  <Route path={`/admin/*`} element={<div>Not Found</div>} />
-                </>
-              )}
-              <Route path={"/*"} element={<div>Not Found</div>} />
-            </Routes>
+            {loading ? (
+              <div className="flex h-[calc(100vh-64px)] items-center justify-center">
+                <CircularProgress />
+              </div>
+            ) : (
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/auth/:type/:id" element={<SignComponent />} />
+                {auth && (
+                  <>
+                    <Route path="/profile/:type" element={<Profile />} />
+                    <Route path="/:type/quiz/:subject?" element={<Quiz />} />
+                    <Route
+                      path="/:admin/quiz/full/:_id"
+                      element={<DisplayQuiz />}
+                    />
+                    <Route
+                      path="/:type/dashboard/:subject?"
+                      element={<Dashboard />}
+                    />
+                    <Route path={`/admin/*`} element={<div>Not Found</div>} />
+                  </>
+                )}
+                <Route path={"/*"} element={<div>Not Found</div>} />
+              </Routes>
+            )}
           </>
         </Box>
       </Box>

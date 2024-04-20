@@ -10,8 +10,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import DropdownAvatar from "./DropdownAvatar";
-import { useAuth } from "../store/hooks";
-import axios from "axios";
+import { useAuth, useAuthLoader } from "../store/hooks";
+
 import { DrawerAppBarProps, itemType } from "../types/appbar_types";
 import { SideDrawer } from "./ui/appbarStyles";
 import { CostumeButton } from "./ui/Button";
@@ -21,15 +21,11 @@ const drawerWidth = 240;
 export default function DrawerAppBar(props: DrawerAppBarProps) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [user, setUser] = React.useState({
-    email: "",
-    name: "",
-    image: "",
-  });
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const loading = useAuthLoader();
   const auth = useAuth();
   React.useEffect(() => {}, [auth]);
   const container =
@@ -61,21 +57,20 @@ export default function DrawerAppBar(props: DrawerAppBarProps) {
             SSA
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {!auth
-              ? props?.navItems.map((item, i) => (
-                  <NavLinks key={i} title={item.title} href={item.href} />
-                ))
-              : props?.defaultNavItem.map((item, i) => (
-                  <NavLinks key={i} title={item.title} href={item.href} />
-                ))}
+            {loading
+              ? ""
+              : !auth
+                ? props?.navItems.map((item, i) => (
+                    <NavLinks key={i} title={item.title} href={item.href} />
+                  ))
+                : props?.defaultNavItem.map((item, i) => (
+                    <NavLinks key={i} title={item.title} href={item.href} />
+                  ))}
           </Box>
           {/* Avatar */}
           {auth && (
             <div className="flex items-center justify-between gap-x-5">
-              <DropdownAvatar
-                image={user.image}
-                dropDownItems={props.dropDownItems}
-              />
+              <DropdownAvatar dropDownItems={props.dropDownItems} />
             </div>
           )}
         </Toolbar>

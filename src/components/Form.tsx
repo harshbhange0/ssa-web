@@ -8,15 +8,18 @@ import SignMethod, {
 import { useRecoilState } from "recoil";
 import { authAtom } from "../store/atom";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 export default function Form() {
+  const [loading, setLoading] = useState(false);
   const [isSignIn, setSignIn] = useState<boolean>(false);
-  //@ts-expect-error
+
   const [auth, setAuth] = useRecoilState(authAtom);
   const [user, setUser] = useState<SignInMethodTypes>({
     email: "",
     password: "",
   });
   const [error, setError] = useState<boolean>(false);
+  auth;
   const navigate = useNavigate();
   const CreateAdmin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,8 +36,9 @@ export default function Form() {
         });
         return;
       }
+      setLoading(true);
       const res = await SignMethod({ ...user }, isSignIn);
-      console.log(res?.data.data);
+
       localStorage.setItem("Authorization", res?.data.token);
       localStorage.setItem("user", res?.data.data);
       setAuth(res?.data.auth);
@@ -42,6 +46,7 @@ export default function Form() {
         email: "",
         password: "",
       });
+      setLoading(false);
       navigate("/");
       return;
     } catch (error) {
@@ -53,6 +58,7 @@ export default function Form() {
         email: "",
         password: "",
       });
+      setLoading(false);
       return;
     }
   };
@@ -104,9 +110,24 @@ export default function Form() {
         />
         <CostumeButton
           type="submit"
-          sx={{ fontSize: "16px", cursor: error ? "not-allowed" : "pointer" }}
+          sx={{
+            fontSize: "16px",
+            cursor: error || loading ? "not-allowed" : "pointer",
+            display: "flex",
+            gap: 1,
+            alignItems: "center",
+          }}
         >
-          Sign {isSignIn ? "In" : "Up"}
+          <div className=" flex items-center justify-center">
+            {loading && (
+              <CircularProgress
+                thickness={2}
+                variant="indeterminate"
+                size={"20px"}
+              />
+            )}
+          </div>
+          <div>Sign {isSignIn ? "In" : "Up"}</div>
         </CostumeButton>
         <span className="flex gap-2">
           {isSignIn ? "Don't Have " : "Already Have "} An Account?{" "}

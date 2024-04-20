@@ -1,4 +1,3 @@
-import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -15,28 +14,11 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 export default auth;
-
 const providerGoogle = new GoogleAuthProvider();
-// localhost:3000/api/v1/user/sign-in
 export const SignInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, providerGoogle);
-    const { email, displayName, photoURL } = res.user;
-    if (!res.user) {
-      return;
-    }
-    const data = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/sign-in`,
-      {
-        email,
-        name: displayName,
-        image: photoURL,
-      },
-    );
-    toast.success(data.data?.msg);
-    localStorage.setItem("id", data?.data.data!);
-    localStorage.setItem("authorization", data?.data.token!);
-    localStorage.setItem("userType", "User");
+    console.log(res);
   } catch (error) {
     toast.error("Error in Sign In/Up");
     console.log(error);

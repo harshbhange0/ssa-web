@@ -1,31 +1,23 @@
-export interface QuizType {
-  _id?: string;
-  quizTitle: string;
-  adminId?: string | {};
-  subject: string;
-  quizTime: string;
-  quizTotalMarks: number;
-  questions?: QuestionTypes[];
+import { z } from "zod";
+export interface QuizItemTypeProps {
+  Title: string;
+  Subject: string;
+  _id: string;
+  questions?: [];
+  loading?: boolean;
 }
-export interface QuestionTypes {
-  _id?: string;
+export interface QuizDialogTypeProps {
+  type: "add" | "update";
+  adminId?: string;
   quizId?: string;
-  question: string;
-  options: string[] | [];
-  answerIndex: number;
 }
 
-export interface QuizWithAdminTypes extends QuizType {
-  adminId: {
-    _id: string;
-    name: string;
-    email: string;
-    quiz: QuizType[] | string[];
-  };
-}
+export const QuizSchemaZod = z.object({
+  Title: z.string().min(4, "To Small To be "),
+  Subject: z.string().min(4, "To Small To be "),
+});
 
-export interface QuizDialogTypes {
-  quizId?: string;
-  _id?: string;
-  type: "add" | "update" | "delete";
-}
+export const QuizUpdateSchemaZod = z.object({
+  Title: z.string().min(5),
+  Subject: z.string().min(6),
+});
