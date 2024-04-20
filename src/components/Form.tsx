@@ -134,9 +134,7 @@ export default function Form() {
           <a
             href="#"
             className=" text-blue-600"
-            onClick={(e) => {
-              setSignIn(!isSignIn);
-            }}
+            onClick={() => setSignIn(!isSignIn)}
           >
             Sign
             {!isSignIn ? " In" : " Up"}
