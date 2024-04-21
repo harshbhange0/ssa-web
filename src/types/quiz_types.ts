@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { QuestionType } from "./question_type";
 export interface QuizItemTypeProps {
   Title: string;
   Subject: string;
   _id: string;
-  questions?: [];
+  questions?: QuestionType[]|[];
   loading?: boolean;
 }
 export interface QuizDialogTypeProps {

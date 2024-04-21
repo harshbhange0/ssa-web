@@ -13,6 +13,10 @@ export const updateQuizAtom = atom({
   key: "updateQuiz",
   default: false,
 });
+export const updateQuestionAtom = atom({
+  key: "updateQuestion",
+  default: false,
+})
 export const authLoaderAtom = atom({
   key: "authLoader",
   default: false,

@@ -10,7 +10,6 @@ import Skeleton from "@mui/material/Skeleton";
 export default function Quiz() {
   const runUpdate = useUpdateQuiz();
   useEffect(() => {
-    console.log("reun");
     getQuiz();
   }, [runUpdate]);
   const getQuiz = async () => {
@@ -25,10 +24,10 @@ export default function Quiz() {
       console.log(error);
     }
   };
-  const [loading, setLoading] = useState(false);
   const [quizzes, setQuizzes] = useState<QuizTypes[]>([
     { Title: "", Subject: "", Admin: "", _id: "" },
   ]);
+  const [loading, setLoading] = useState(false);
   const adminId = localStorage.getItem("user");
 
   return (
