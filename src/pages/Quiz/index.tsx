@@ -4,7 +4,6 @@ import { Container, Typography } from "@mui/material";
 import {
   QuizTypes,
   getQuizByAdmin,
-  getQuizBySubject,
 } from "../../utils/quizActions";
 import QuizItem from "../../components/quiz/QuizItem";
 import QuizDialog from "../../components/quiz/QuizDialog";
@@ -13,7 +12,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useParams } from "react-router-dom";
 
 export default function Quiz() {
-  const { type, subject } = useParams();
+  const { subject } = useParams();
   const runUpdate = useUpdateQuiz();
   useEffect(() => {
     getQuiz();
@@ -55,16 +54,20 @@ export default function Quiz() {
       <Container
         component={"section"}
         maxWidth="md"
-        sx={{ py: 10, mx: "auto", height: "100%", overflow: "auto" }}
+        sx={{ py: {xs:2,sm:5}, mx: "auto", height: "100%", overflow: "auto" }}
         className="w-auto"
       >
-        <section className=" flex flex-col items-center justify-center gap-4  pt-10">
-          <>
-            <Typography variant="h5" sx={{ textAlign: "center" }}>
-              No Quiz Found !
-            </Typography>
+        <section className=" flex flex-col items-center justify-center gap-4  pt-5">
+          {quizzes.length == 0 ? (
+            <>
+              <Typography variant="h5" sx={{ textAlign: "center" }}>
+                No Quiz Found !
+              </Typography>
+              <QuizDialog type="add" adminId={adminId ? adminId : ""} />
+            </>
+          ) : (
             <QuizDialog type="add" adminId={adminId ? adminId : ""} />
-          </>
+          )}
           {quizzes.length !== 0 && (
             <div className=" flex h-full w-full flex-col items-center justify-center gap-2">
               {loading ? (

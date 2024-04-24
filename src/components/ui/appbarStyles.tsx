@@ -6,6 +6,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { useAuth } from "../../store/hooks";
 import { Link } from "react-router-dom";
 import { DrawerProps, itemType } from "../../types/appbar_types";
+import Divider from "@mui/material/Divider";
+
 
 export const SideDrawer = ({
   navItems,
@@ -17,8 +19,9 @@ export const SideDrawer = ({
     /** side drawer */
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        SSA 
+        SSA
       </Typography>
+      <Divider/>
       <List>
         {/*  side drawer items  */}
         {!auth

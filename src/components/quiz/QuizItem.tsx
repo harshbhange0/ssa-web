@@ -17,14 +17,17 @@ export default function QuizItem({
   const [updateQuiz, setUpdateQuiz] = useRecoilState(updateQuizAtom);
   const user = localStorage.getItem("userType");
   return (
-    <div className="grid grid-cols-2 place-items-center gap-1 border px-2 py-3 sm:grid-cols-4 sm:gap-3 capitalize ">
-      <div className="col-span-3 grid grid-cols-4 place-items-center gap-1">
+    <div className="grid grid-cols-2 place-items-center gap-1 border px-2 py-3 text-[12px] capitalize  sm:grid-cols-4 sm:gap-3 sm:text-[16px] ">
+      <div className="relative col-span-3 grid grid-cols-3 place-items-center gap-1 sm:grid-cols-4">
         <span className="line-clamp-1 w-[200px] max-w-full	">{Title}</span>
         <span className="w-[200px] max-w-full">{Subject}</span>
         <span className="w-[200px] max-w-full">
           Total Que: {questions?.length}
         </span>
-        <Link to={`/${user}/quiz/full/${_id}`}>
+        <Link
+          to={`/${user}/quiz/full/${_id}`}
+          className="absolute right-0 top-1/2  translate-y-1/2 transform sm:static sm:top-0 sm:translate-y-0"
+        >
           <InsertLinkIcon className="text-blue-300 hover:text-blue-500" />
         </Link>
       </div>

@@ -100,7 +100,7 @@ export default function QuizDialog({
         </DialogTitle>
         <DialogContent>
           <DialogContentText></DialogContentText>
-          <div className="flex items-center justify-center gap-4 flex-col w-full">
+          <div className="flex w-full flex-col items-center justify-center gap-4">
             <TextField
               autoFocus
               required
@@ -117,12 +117,13 @@ export default function QuizDialog({
               }}
             />
             <SelectComp
+              readOnly={type == "update" ? true : false}
               handleChange={(e) => {
                 setQuiz({ ...quiz, Subject: e.target.value });
               }}
               value={quiz.Subject}
               label="Subjects"
-              options={["English","Mathematic", "Marathi", "Science"]}
+              options={["English", "Mathematic", "Marathi", "Science"]}
             />
           </div>
         </DialogContent>

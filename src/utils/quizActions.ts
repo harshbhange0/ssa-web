@@ -71,10 +71,7 @@ export async function getOneQuizById(_id: string) {
     throw new Error("Something Went Wrong in getQuizByAdmin");
   }
 }
-export async function updateQuizById(
-  _id: string,
-  data: { Title: string; Subject: string },
-) {
+export async function updateQuizById(_id: string, data: { Title: string }) {
   try {
     if (!token) {
       throw new Error("No token found");
@@ -110,11 +107,4 @@ export async function deleteQuizById(_id: string) {
 
     throw new Error("Something Went Wrong in deleteQuizById");
   }
-}
-
-export async function getQuizBySubject(
-  type: "admin" | "student",
-  subject: string,
-) {
-  console.log(type, subject);
 }

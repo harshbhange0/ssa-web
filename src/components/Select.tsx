@@ -1,4 +1,3 @@
-
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -9,18 +8,22 @@ export default function SelectComp({
   handleChange,
   value,
   label,
-  error
+  error,
+  readOnly,
 }: {
   label: string;
   value: string;
   handleChange: (event: SelectChangeEvent) => void;
-    options: string[];
-  error?:boolean
+  options: string[];
+  error?: boolean;
+  readOnly: boolean;
 }) {
   return (
     <div>
       <FormControl sx={{ width: "100%", minWidth: "300px" }} size="small">
-        <InputLabel id="demo-select-small-label  " error={error}>{label}</InputLabel>
+        <InputLabel id="demo-select-small-label  " error={error}>
+          {label}
+        </InputLabel>
         <Select
           labelId="demo-select-small-label"
           id="demo-select-small"
@@ -28,6 +31,8 @@ export default function SelectComp({
           label={label}
           variant="standard"
           onChange={handleChange}
+          readOnly={readOnly}
+          disabled={readOnly}
         >
           <MenuItem value="">
             <>None</>
