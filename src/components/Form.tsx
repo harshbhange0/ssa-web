@@ -1,9 +1,10 @@
 import { Container, Stack, TextField, Typography } from "@mui/material";
 import { CostumeButton } from "./ui/Button";
 import { useState } from "react";
-import SignMethod, {
-  SignInMethodTypes,
-  signInMethodSchema,
+import {
+  AdminSignMethod,
+  AdminSignInMethodTypes,
+  adminSignInMethodSchema,
 } from "../utils/authAction";
 import { useRecoilState } from "recoil";
 import { authAtom } from "../store/atom";
@@ -14,7 +15,7 @@ export default function Form() {
   const [isSignIn, setSignIn] = useState<boolean>(false);
 
   const [auth, setAuth] = useRecoilState(authAtom);
-  const [user, setUser] = useState<SignInMethodTypes>({
+  const [user, setUser] = useState<AdminSignInMethodTypes>({
     email: "",
     password: "",
   });
@@ -24,7 +25,7 @@ export default function Form() {
   const CreateAdmin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const out = signInMethodSchema.safeParse(user);
+      const out = adminSignInMethodSchema.safeParse(user);
       if (!out.success) {
         setError(true);
         setTimeout(() => {
@@ -37,7 +38,7 @@ export default function Form() {
         return;
       }
       setLoading(true);
-      const res = await SignMethod({ ...user }, isSignIn);
+      const res = await AdminSignMethod({ ...user }, isSignIn);
 
       localStorage.setItem("Authorization", res?.data.token);
       localStorage.setItem("user", res?.data.data);

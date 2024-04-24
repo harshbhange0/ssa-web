@@ -16,6 +16,7 @@ import {
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { updateQuizAtom } from "../../store/atom";
+import SelectComp from "../Select";
 export default function QuizDialog({
   type,
   adminId,
@@ -99,35 +100,31 @@ export default function QuizDialog({
         </DialogTitle>
         <DialogContent>
           <DialogContentText></DialogContentText>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="Title"
-            name="Title"
-            label="Quiz Title"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={quiz.Title}
-            onChange={(e) => {
-              setQuiz({ ...quiz, Title: e.target.value });
-            }}
-          />
-          <TextField
-            required
-            margin="dense"
-            id="Subject"
-            name="Subject"
-            label="Quiz Subject"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={quiz.Subject}
-            onChange={(e) => {
-              setQuiz({ ...quiz, Subject: e.target.value });
-            }}
-          />
+          <div className="flex items-center justify-center gap-4 flex-col w-full">
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="Title"
+              name="Title"
+              label="Quiz Title"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={quiz.Title}
+              onChange={(e) => {
+                setQuiz({ ...quiz, Title: e.target.value });
+              }}
+            />
+            <SelectComp
+              handleChange={(e) => {
+                setQuiz({ ...quiz, Subject: e.target.value });
+              }}
+              value={quiz.Subject}
+              label="Subjects"
+              options={["English","Mathematic", "Marathi", "Science"]}
+            />
+          </div>
         </DialogContent>
         <DialogActions>
           <CostumeButton onClick={handleClose}>Cancel</CostumeButton>

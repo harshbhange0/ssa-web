@@ -1,11 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Form from "../../components/Form";
 import { Box } from "@mui/material";
 import { SignInWithGoogle } from "../../firebase/firebase.config";
 import { CostumeButton } from "../../components/ui/Button";
+import { authAtom } from "../../store/atom";
+import { useRecoilState } from "recoil";
 
 export default function SignComponent() {
-  const {  type } = useParams();
+  //@ts-expect-error
+  const [auth, setAuth] = useRecoilState(authAtom);
+  const navigate = useNavigate();
+  const { type } = useParams();
   if (type) {
     localStorage.setItem("userType", type);
   }
@@ -22,8 +27,11 @@ export default function SignComponent() {
           }}
           className=" flex items-center gap-3"
           onClick={async () => {
-            await SignInWithGoogle();
             localStorage.setItem("userType", "Student");
+            const res = await SignInWithGoogle();
+            setAuth(res);
+            setAuth(true);
+            navigate("/");
           }}
         >
           <div className="w-10">
@@ -35,7 +43,7 @@ export default function SignComponent() {
     </>
   ) : (
     <>
-      <Form/>
+      <Form />
     </>
   );
 }

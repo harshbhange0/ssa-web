@@ -7,22 +7,26 @@ import {
   Typography,
 } from "@mui/material";
 import { signOut } from "firebase/auth";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import auth from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { DropdownAvatarProps } from "../types/dropdownAvatar_types";
 import { authAtom } from "../store/atom";
+import { onAuthStateChanged } from "firebase/auth";
+import authFirebase from "../firebase/firebase.config";
 
-export default function DropdownAvatar({
-  dropDownItems,
-  image,
-}: DropdownAvatarProps) {
+interface userType {
+  email: string | undefined;
+  image: string | undefined;
+}
+export default function DropdownAvatar({ dropDownItems }: DropdownAvatarProps) {
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
+  const [user, setUser] = useState<userType>({ email: "", image: "" });
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -31,11 +35,21 @@ export default function DropdownAvatar({
   };
   //@ts-expect-error
   const [authr, setAuthR] = useRecoilState(authAtom);
+  useEffect(() => {
+    if (localStorage.getItem("userType") == "student") {
+      onAuthStateChanged(authFirebase, (user) => {
+        if ((user?.email, user?.photoURL)) {
+          setUser({ email: user?.email!, image: user?.photoURL });
+        }
+      });
+    }
+    setUser({ email: undefined, image: undefined });
+  }, []);
   return (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-        {image ? (
-          <Avatar sx={{ width: 28, height: 28 }} src={image} />
+        {user.email ? (
+          <Avatar sx={{ width: 28, height: 28 }} src={user.image!} />
         ) : (
           <Avatar
             sx={{

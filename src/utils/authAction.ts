@@ -4,14 +4,22 @@ import { z } from "zod";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-export const signInMethodSchema = z.object({
+export const adminSignInMethodSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
-export type SignInMethodTypes = z.infer<typeof signInMethodSchema>;
+export type AdminSignInMethodTypes = z.infer<typeof adminSignInMethodSchema>;
 
-export default async function SignMethod(
-  { email, password }: SignInMethodTypes,
+export const studentSignInMethodSchema = z.object({
+  email: z.string().email(),
+  image: z.string().min(8),
+});
+export type StudentSignInMethodTypes = z.infer<
+  typeof studentSignInMethodSchema
+>;
+
+export async function AdminSignMethod(
+  { email, password }: AdminSignInMethodTypes,
   isSignIn: boolean,
 ) {
   try {
@@ -30,13 +38,24 @@ export default async function SignMethod(
   }
 }
 
+export async function StudentSignMethod(email: string, image: string) {
+  try {
+    const response = await axios.post(`${baseUrl}/student/create`, {
+      email,
+      image,
+    });
+    return response.data.data;
+  } catch (error: any) {
+    throw new AxiosError(error.response.data);
+  }
+}
 export async function verify() {
   const token = localStorage.getItem("Authorization");
   if (!token) {
     return false;
   }
   try {
-    const response = await axios.get(`${baseUrl}/admin/verify`, {
+    const response = await axios.get(`${baseUrl}/verify`, {
       headers: {
         Authorization: token,
       },
@@ -44,6 +63,5 @@ export async function verify() {
     return response.data.data.auth;
   } catch (error: any) {
     throw new AxiosError(error.response.data);
-    
   }
 }

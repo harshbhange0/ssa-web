@@ -7,6 +7,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { Divider } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { DrawerHeader } from "./ui/SideBarStyles";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 
 export default function SideBar() {
   const location = useLocation();
@@ -17,14 +19,15 @@ export default function SideBar() {
   const sideBarItem: { title: string; href: string }[] = [
     { title: "Home", href: `/${type}/${pageType}` },
     { title: "English", href: `/${type}/${pageType}/english` },
-    { title: "Math", href: `/${type}/${pageType}/math` },
+    { title: "Mathematic", href: `/${type}/${pageType}/mathematic` },
     { title: "Marathi", href: `/${type}/${pageType}/marathi` },
+    { title: "Science", href: `/${type}/${pageType}/science` },
   ];
   return (
     <Box
       component={"div"}
       sx={{
-        display: { xs:"none", lg:"flex"},
+        display: { xs: "none", lg: "flex" },
         flexDirection: "column",
         maxWidth: "300px",
         width: "100%",
@@ -42,9 +45,10 @@ export default function SideBar() {
             <ListItem key={i}>
               <Link to={item.href} className="w-full">
                 <ListItemButton>
-                  <ListItemText className="text-center">
-                    {item.title}
-                  </ListItemText>
+                  <ListItemText className="">{item.title}</ListItemText>
+                  <ListItemIcon>
+                    <ChevronRightOutlinedIcon />
+                  </ListItemIcon>
                 </ListItemButton>
               </Link>
             </ListItem>

@@ -15,17 +15,18 @@ export default function SelectComp({
   value: string;
   handleChange: (event: SelectChangeEvent) => void;
     options: string[];
-  error:boolean
+  error?:boolean
 }) {
   return (
     <div>
-      <FormControl sx={{ width: "auto", minWidth: "200px" }} size="small">
+      <FormControl sx={{ width: "100%", minWidth: "300px" }} size="small">
         <InputLabel id="demo-select-small-label  " error={error}>{label}</InputLabel>
         <Select
           labelId="demo-select-small-label"
           id="demo-select-small"
           value={value}
           label={label}
+          variant="standard"
           onChange={handleChange}
         >
           <MenuItem value="">

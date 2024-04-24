@@ -1,35 +1,50 @@
 import { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { Container, Typography } from "@mui/material";
-import { QuizTypes, getQuizByAdmin } from "../../utils/quizActions";
+import {
+  QuizTypes,
+  getQuizByAdmin,
+  getQuizBySubject,
+} from "../../utils/quizActions";
 import QuizItem from "../../components/quiz/QuizItem";
 import QuizDialog from "../../components/quiz/QuizDialog";
 import { useUpdateQuiz } from "../../store/hooks";
-import Skeleton from "@mui/material/Skeleton";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useParams } from "react-router-dom";
 
 export default function Quiz() {
+  const { type, subject } = useParams();
   const runUpdate = useUpdateQuiz();
   useEffect(() => {
     getQuiz();
-  }, [runUpdate]);
+  }, [runUpdate, subject]);
   const getQuiz = async () => {
     setLoading(true);
     try {
       const res = await getQuizByAdmin();
-      setQuizzes(res);
+      if (subject == undefined) {
+        setQuizzes(res);
+        setLoading(false);
+        return;
+      }
+      const filteredQ = res.filter(filteredQuiz);
+      setQuizzes(filteredQ);
       setLoading(false);
+      return;
     } catch (error) {
       setLoading(false);
       setQuizzes([]);
       console.log(error);
     }
   };
+  const filteredQuiz = (quizzes: QuizTypes) => {
+    return quizzes.Subject.toLowerCase() == subject?.toLowerCase();
+  };
   const [quizzes, setQuizzes] = useState<QuizTypes[]>([
     { Title: "", Subject: "", Admin: "", _id: "" },
   ]);
   const [loading, setLoading] = useState(false);
   const adminId = localStorage.getItem("user");
-
   return (
     <div
       className="relative flex h-[calc(100vh-64px)]
@@ -43,26 +58,19 @@ export default function Quiz() {
         sx={{ py: 10, mx: "auto", height: "100%", overflow: "auto" }}
         className="w-auto"
       >
-        <div className="relative w-full ">
-          <Typography sx={{ textAlign: "center" }} variant="h3">
-            Quiz
-          </Typography>{" "}
-          <div className=" absolute right-10 top-1/2 -translate-y-1/2 transform">
-            <QuizDialog type="add" adminId={adminId ? adminId : ""} />
-          </div>
-        </div>
         <section className=" flex flex-col items-center justify-center gap-4  pt-10">
-          {quizzes.length !== 0 ? (
+          <>
+            <Typography variant="h5" sx={{ textAlign: "center" }}>
+              No Quiz Found !
+            </Typography>
+            <QuizDialog type="add" adminId={adminId ? adminId : ""} />
+          </>
+          {quizzes.length !== 0 && (
             <div className=" flex h-full w-full flex-col items-center justify-center gap-2">
               {loading ? (
-                <>
-                  <Skeleton variant="rounded" width={"100%"} height={59} />
-                  <Skeleton variant="rounded" width={"100%"} height={59} />
-                  <Skeleton variant="rounded" width={"100%"} height={59} />
-                  <Skeleton variant="rounded" width={"100%"} height={59} />
-                  <Skeleton variant="rounded" width={"100%"} height={59} />
-                  <Skeleton variant="rounded" width={"100%"} height={59} />
-                </>
+                <div className=" flex h-full w-full items-center justify-center">
+                  <CircularProgress />
+                </div>
               ) : (
                 quizzes.map((quiz, i) => (
                   <QuizItem
@@ -75,13 +83,6 @@ export default function Quiz() {
                 ))
               )}
             </div>
-          ) : (
-            <>
-              <Typography variant="h5" sx={{ textAlign: "center" }}>
-                No Quiz Found !
-              </Typography>
-              <QuizDialog type="add" adminId={adminId ? adminId : ""} />
-            </>
           )}
         </section>
       </Container>
